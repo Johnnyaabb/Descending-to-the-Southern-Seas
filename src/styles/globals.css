@@ -1,0 +1,174 @@
+@import "mapbox-gl/dist/mapbox-gl.css";
+@import "maplibre-gl/dist/maplibre-gl.css";
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html,
+  body,
+  #root {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    background: #0c0a08;
+    color: #f5e6c8;
+    font-family: "Noto Sans SC", ui-sans-serif, system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  .font-display {
+    font-family: "Noto Serif SC", "Songti SC", serif;
+    letter-spacing: 0.02em;
+  }
+}
+
+@layer components {
+  .panel {
+    @apply bg-black/55 backdrop-blur-md border border-oldgold/30 rounded-lg shadow-scroll;
+  }
+
+  .chip {
+    @apply inline-flex items-center gap-1 rounded-full border border-oldgold/40 bg-black/50 px-2 py-0.5 text-xs text-ricepaper;
+  }
+}
+
+/* Override popup style */
+.mapboxgl-popup-content,
+.maplibregl-popup-content {
+  background: rgba(12, 10, 8, 0.92) !important;
+  color: #f5e6c8 !important;
+  border: 1px solid rgba(200, 169, 81, 0.4) !important;
+  border-radius: 8px !important;
+  font-family: "Noto Sans SC", sans-serif;
+  padding: 12px 14px !important;
+  min-width: 220px;
+  max-width: 320px;
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.6);
+}
+
+.mapboxgl-popup-tip,
+.maplibregl-popup-tip {
+  border-top-color: rgba(12, 10, 8, 0.92) !important;
+  border-bottom-color: rgba(12, 10, 8, 0.92) !important;
+}
+
+.mapboxgl-popup-close-button,
+.maplibregl-popup-close-button {
+  color: #f5e6c8 !important;
+  font-size: 18px !important;
+  padding: 4px 8px !important;
+}
+
+/* Timeline slider: invisible track (we render our own) + glowing themed thumb */
+input[type="range"].cs-slider {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 22px;
+  background: transparent;
+  cursor: pointer;
+  margin: 0;
+  position: relative;
+  z-index: 3;
+}
+input[type="range"].cs-slider:focus {
+  outline: none;
+}
+input[type="range"].cs-slider::-webkit-slider-runnable-track {
+  height: 22px;
+  background: transparent;
+  border: none;
+}
+input[type="range"].cs-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 35%, #fff6e0 0%, #f5e6c8 35%, #d49a3b 80%);
+  border: 2px solid #b22222;
+  margin-top: 2px;
+  box-shadow:
+    0 0 0 3px rgba(178, 34, 34, 0.45),
+    0 0 18px 4px rgba(232, 122, 30, 0.55),
+    0 4px 10px rgba(0, 0, 0, 0.6);
+  transition: transform 0.15s ease, box-shadow 0.2s ease;
+}
+input[type="range"].cs-slider::-webkit-slider-thumb:hover {
+  transform: scale(1.18);
+  box-shadow:
+    0 0 0 4px rgba(178, 34, 34, 0.55),
+    0 0 26px 6px rgba(232, 122, 30, 0.75),
+    0 4px 12px rgba(0, 0, 0, 0.6);
+}
+input[type="range"].cs-slider::-moz-range-track {
+  height: 22px;
+  background: transparent;
+  border: none;
+}
+input[type="range"].cs-slider::-moz-range-thumb {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 35%, #fff6e0 0%, #f5e6c8 35%, #d49a3b 80%);
+  border: 2px solid #b22222;
+  box-shadow:
+    0 0 0 3px rgba(178, 34, 34, 0.45),
+    0 0 18px 4px rgba(232, 122, 30, 0.55),
+    0 4px 10px rgba(0, 0, 0, 0.6);
+}
+
+/* Pulsing sheen along the active fill */
+@keyframes timelineSheen {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+.cs-track-active {
+  background-image: linear-gradient(
+    90deg,
+    rgba(245, 230, 200, 0) 0%,
+    rgba(245, 230, 200, 0.45) 50%,
+    rgba(245, 230, 200, 0) 100%
+  );
+  background-size: 200% 100%;
+  background-repeat: no-repeat;
+  animation: timelineSheen 4.5s linear infinite;
+}
+
+/* Subtle glow under the year flag */
+@keyframes flagGlow {
+  0%, 100% { box-shadow: 0 0 12px rgba(232, 122, 30, 0.45); }
+  50% { box-shadow: 0 0 22px rgba(232, 122, 30, 0.75); }
+}
+.cs-year-flag {
+  animation: flagGlow 2.2s ease-in-out infinite;
+}
+
+/* Particle pulse animation */
+@keyframes shipPulse {
+  0%, 100% {
+    transform: scale(1);
+    filter: drop-shadow(0 0 0 rgba(178, 34, 34, 0));
+  }
+  50% {
+    transform: scale(1.08);
+    filter: drop-shadow(0 0 8px rgba(178, 34, 34, 0.6));
+  }
+}
+
+.scrollbar-thin::-webkit-scrollbar {
+  width: 6px;
+}
+.scrollbar-thin::-webkit-scrollbar-thumb {
+  background: rgba(200, 169, 81, 0.4);
+  border-radius: 4px;
+}
+.scrollbar-thin::-webkit-scrollbar-track {
+  background: transparent;
+}
