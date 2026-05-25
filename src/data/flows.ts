@@ -11,12 +11,13 @@ export interface MigrationFlow {
 }
 
 /**
- * 潮汕→南洋迁徙弧线数据。volume 是估算的累计出洋人次，用于：
+ * 闽南与潮汕→南洋迁徙弧线数据。volume 是估算的累计出洋人次，用于：
  * 1. 控制弧线宽度（对数比例）
  * 2. 计算到达港的累计人口规模
  * 3. 时间窗激活动画
  *
- * 来源：综合《汕头海关志》、广东省侨办、维基百科、泰国/新加坡/马来亚华侨史
+ * 来源：综合《汕头海关志》《厦门海关历史档案》、广东省侨办、维基百科、东南亚各国华侨史；
+ * 闽南支系为与既有潮汕数据并列的示意性拆分，具体比例因史料口径而异。
  */
 export const FLOWS: MigrationFlow[] = [
   // ─── 阶段 1：海禁初开 1684–1781 ───
@@ -60,7 +61,29 @@ export const FLOWS: MigrationFlow[] = [
     startYear: 1720,
     endYear: 1781,
     volume: 6000,
-    note: "经马六甲海峡至荷属东印度的早期潮汕商人。",
+    note: "闽南海商经马六甲海峡早期进入巴城与爪哇市场。",
+    source: "印尼华侨史",
+    phaseId: "openSea",
+  },
+  {
+    id: "quanzhou-bangkok-early",
+    fromId: "quanzhou",
+    toId: "bangkok",
+    startYear: 1684,
+    endYear: 1781,
+    volume: 42000,
+    note: "清初泉属商民随洋船赴暹贩米与移民定居的早期路线。",
+    source: "泉州华侨史；《东西洋考》",
+    phaseId: "openSea",
+  },
+  {
+    id: "zhangzhou-batavia-early",
+    fromId: "zhangzhou",
+    toId: "batavia",
+    startYear: 1710,
+    endYear: 1781,
+    volume: 12000,
+    note: "经厦门湾与爪哇海航路进入荷属马鲁古—爪哇贸易圈的漳泉商人。",
     source: "印尼华侨史",
     phaseId: "openSea",
   },
@@ -143,6 +166,50 @@ export const FLOWS: MigrationFlow[] = [
     source: "马来亚华侨史",
     phaseId: "redShipPeak",
   },
+  {
+    id: "xiamen-bangkok-peak",
+    fromId: "xiamen",
+    toId: "bangkok",
+    startYear: 1782,
+    endYear: 1859,
+    volume: 165000,
+    note: "嘉庆至咸丰间厦门—暹罗米谷与锡货贩运带来的定居移民。",
+    source: "闽南移民史；暹罗华侨史",
+    phaseId: "redShipPeak",
+  },
+  {
+    id: "quanzhou-singapore-peak",
+    fromId: "quanzhou",
+    toId: "singapore",
+    startYear: 1819,
+    endYear: 1859,
+    volume: 62000,
+    note: "开埠后泉属种植园主与工匠经海峡抵新。",
+    source: "新加坡福建会馆史料",
+    phaseId: "redShipPeak",
+  },
+  {
+    id: "zhangzhou-penang-peak",
+    fromId: "zhangzhou",
+    toId: "penang",
+    startYear: 1786,
+    endYear: 1859,
+    volume: 48000,
+    note: "槟城开埠后漳泉移民与当地「福建公司」网络扩张。",
+    source: "马来亚华侨史",
+    phaseId: "redShipPeak",
+  },
+  {
+    id: "xiamen-batavia-peak",
+    fromId: "xiamen",
+    toId: "batavia",
+    startYear: 1782,
+    endYear: 1859,
+    volume: 55000,
+    note: "荷属种植园经济扩张期闽南海员与商人留居爪哇。",
+    source: "印尼华侨史",
+    phaseId: "redShipPeak",
+  },
 
   // ─── 阶段 3：汕头开埠与契约华工 1860–1911 ───
   {
@@ -185,7 +252,7 @@ export const FLOWS: MigrationFlow[] = [
     startYear: 1860,
     endYear: 1911,
     volume: 180000,
-    note: "柔佛港主制度下潮汕籍港主大量招工。",
+    note: "柔佛港主制度下以潮、闽籍港主招工最为常见。",
     source: "柔佛港主史",
     phaseId: "shantouTreaty",
   },
@@ -244,6 +311,72 @@ export const FLOWS: MigrationFlow[] = [
     source: "马来亚华侨史",
     phaseId: "shantouTreaty",
   },
+  {
+    id: "xiamen-bangkok-treaty",
+    fromId: "xiamen",
+    toId: "bangkok",
+    startYear: 1860,
+    endYear: 1911,
+    volume: 410000,
+    note: "厦门口岸与汕头发航线并列，蒸汽船时代赴暹契约工与自由移民陡增。",
+    source: "《厦门海关历史档案》；南洋华侨史",
+    phaseId: "shantouTreaty",
+  },
+  {
+    id: "quanzhou-bangkok-treaty",
+    fromId: "quanzhou",
+    toId: "bangkok",
+    startYear: 1860,
+    endYear: 1911,
+    volume: 185000,
+    note: "泉属各县经厦门、泉州湾小港集中南渡。",
+    source: "泉州华侨史",
+    phaseId: "shantouTreaty",
+  },
+  {
+    id: "xiamen-singapore-treaty",
+    fromId: "xiamen",
+    toId: "singapore",
+    startYear: 1860,
+    endYear: 1911,
+    volume: 360000,
+    note: "海峡殖民地苦力贸易重要来源港之一。",
+    source: "新加坡华人志",
+    phaseId: "shantouTreaty",
+  },
+  {
+    id: "zhangzhou-saigon-treaty",
+    fromId: "zhangzhou",
+    toId: "saigon",
+    startYear: 1860,
+    endYear: 1911,
+    volume: 95000,
+    note: "法属南圻开垦与稻米出口吸引闽南农民。",
+    source: "越南华侨史",
+    phaseId: "shantouTreaty",
+  },
+  {
+    id: "xiamen-medan-treaty",
+    fromId: "xiamen",
+    toId: "medan",
+    startYear: 1865,
+    endYear: 1911,
+    volume: 140000,
+    note: "经新加坡转口至日里种植园的契约华工队伍中闽籍比重显著。",
+    source: "苏门答腊华侨史",
+    phaseId: "shantouTreaty",
+  },
+  {
+    id: "xiamen-batavia-treaty",
+    fromId: "xiamen",
+    toId: "batavia",
+    startYear: 1860,
+    endYear: 1911,
+    volume: 130000,
+    note: "爪哇岛内港苦力与市场商贩主要来源之一就是厦门港。",
+    source: "印尼华侨史",
+    phaseId: "shantouTreaty",
+  },
 
   // ─── 阶段 4：民国移民高峰 1912–1937 ───
   {
@@ -297,7 +430,7 @@ export const FLOWS: MigrationFlow[] = [
     startYear: 1912,
     endYear: 1937,
     volume: 200000,
-    note: "潮汕「火砻」（碾米）业称雄堤岸。",
+    note: "堤岸「福建帮」与潮州帮均曾主导大米加工与零售。",
     source: "越南华侨史；陈慈黉传",
     phaseId: "republic",
   },
@@ -308,7 +441,7 @@ export const FLOWS: MigrationFlow[] = [
     startYear: 1912,
     endYear: 1937,
     volume: 120000,
-    note: "金边、马德望潮汕商行林立。",
+    note: "金边、马德望闽南与潮汕商行并行。",
     source: "柬埔寨华人志",
     phaseId: "republic",
   },
@@ -332,6 +465,50 @@ export const FLOWS: MigrationFlow[] = [
     volume: 200000,
     note: "巴达维亚潮商势力扩大。",
     source: "印尼华侨史",
+    phaseId: "republic",
+  },
+  {
+    id: "xiamen-bangkok-republic",
+    fromId: "xiamen",
+    toId: "bangkok",
+    startYear: 1912,
+    endYear: 1937,
+    volume: 520000,
+    note: "民国动乱与农村经济凋敝推动闽南持续南渡泰国。",
+    source: "圭海四记《五大帮人口考》",
+    phaseId: "republic",
+  },
+  {
+    id: "quanzhou-singapore-republic",
+    fromId: "quanzhou",
+    toId: "singapore",
+    startYear: 1912,
+    endYear: 1937,
+    volume: 195000,
+    note: "新马橡胶鼎盛期泉漳籍园工与技术工人大量移入。",
+    source: "新加坡华人志",
+    phaseId: "republic",
+  },
+  {
+    id: "zhangzhou-medan-republic",
+    fromId: "zhangzhou",
+    toId: "medan",
+    startYear: 1912,
+    endYear: 1937,
+    volume: 180000,
+    note: "与汕头线并行，苏北烟草种植仍以闽侨劳动力为主。",
+    source: "苏门答腊华侨史",
+    phaseId: "republic",
+  },
+  {
+    id: "xiamen-malacca-republic",
+    fromId: "xiamen",
+    toId: "malacca",
+    startYear: 1912,
+    endYear: 1937,
+    volume: 75000,
+    note: "马六甲海峡两岸乡镇闽籍商贩与伙计移动。",
+    source: "马来亚华侨史",
     phaseId: "republic",
   },
 
@@ -369,6 +546,28 @@ export const FLOWS: MigrationFlow[] = [
     source: "越南华侨史",
     phaseId: "warEnd",
   },
+  {
+    id: "xiamen-singapore-war",
+    fromId: "xiamen",
+    toId: "singapore",
+    startYear: 1938,
+    endYear: 1949,
+    volume: 32000,
+    note: "战争年代仍有零星乘船避乱至海峡殖民地者。",
+    source: "厦门海关档案；南洋华侨史料",
+    phaseId: "warEnd",
+  },
+  {
+    id: "zhangzhou-phnompenh-war",
+    fromId: "zhangzhou",
+    toId: "phnompenh",
+    startYear: 1945,
+    endYear: 1949,
+    volume: 18000,
+    note: "战后短暂恢复的内河与沿海交通下的柬域垦殖移民。",
+    source: "柬埔寨华人志",
+    phaseId: "warEnd",
+  },
 ];
 
 export function flowsActiveAt(year: number): MigrationFlow[] {
@@ -376,7 +575,7 @@ export function flowsActiveAt(year: number): MigrationFlow[] {
 }
 
 /**
- * 给定 year, 返回该 destination 在 1684 → year 区间内累计接收的潮汕人数。
+ * 给定 year, 返回该 destination 在 1684 → year 区间内示意累计接收的闽南与潮汕出洋人次数。
  * 假设流量在 startYear..endYear 之间线性累积。
  */
 export function cumulativeAtDestination(destId: string, year: number): number {

@@ -3,19 +3,20 @@
   "private": true,
   "version": "0.1.0",
   "type": "module",
-  "description": "潮汕下南洋历史可视化地图 - Chaoshan migration to Southeast Asia interactive map",
+  "description": "闽南与潮汕下南洋历史迁徙交互地图 · Minnan and Teochew migration to Southeast Asia 1684–1949",
   "scripts": {
     "dev": "vite",
-    "build": "tsc -b && vite build",
+    "build": "tsc -b && vite build && cp dist/index.html dist/404.html",
     "preview": "vite preview"
   },
   "dependencies": {
     "d3": "^7.9.0",
     "framer-motion": "^11.11.17",
-    "maplibre-gl": "^4.7.1",
     "mapbox-gl": "^3.8.0",
+    "maplibre-gl": "^4.7.1",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
+    "react-router-dom": "^7.15.1",
     "zustand": "^5.0.1"
   },
   "devDependencies": {

@@ -72,6 +72,44 @@ export const ORIGIN_PORTS: Port[] = [
     description: "潮阳古海门所，沿海居民赴暹罗、安南的早期出发点之一。",
     source: "潮阳县志",
   },
+  {
+    id: "xiamen",
+    name: "厦门港",
+    nameEn: "Xiamen / Amoy",
+    kind: "origin",
+    country: "闽南 · 厦门一带",
+    /** 厦门半岛商埠核心区一带（WGS-84） */
+    coord: [118.089, 24.479],
+    established: 1843,
+    description:
+      "清代以来闽南对洋贸易重镇；鸦片战争后为首开五口之一，与汕头并列为近代南洋契约华工与自由移民主要登船口岸。槟榔屿与海峡殖民地「闽帮」多由此线出海。",
+    source: "《厦门海关历史档案》；南洋华侨史",
+  },
+  {
+    id: "quanzhou",
+    name: "泉州湾（晋江口—后渚）",
+    nameEn: "Quanzhou Bay",
+    kind: "origin",
+    country: "闽南 · 泉州",
+    /** 泉州市区—后渚港区海面代表坐标（WGS-84） */
+    coord: [118.676, 24.874],
+    description:
+      "历代海舶聚所；晚清民国南安、晋江、惠安各县赴暹罗、槟城与新马务农营商者络绎不绝，与海澄、安溪等闽南网络叠合。",
+    source: "《东西洋考》；泉州华侨史",
+  },
+  {
+    id: "zhangzhou",
+    name: "漳州湾外—月港海道示意",
+    nameEn: "Zhangzhou / Yuegang approach",
+    kind: "origin",
+    country: "闽南 · 漳州",
+    /** 九龙江口海域示意点（古月港岸线今昔变化大）（WGS-84） */
+    coord: [117.96, 24.42],
+    established: 1567,
+    description:
+      "隆庆元年部分开海以来，闽南商渔民经月港报税出洋的制度影响深远；晚清以降多改由厦门接驳，与海澄、云霄等县人下南洋的路线交织。",
+    source: "《海澄县志》；闽南华侨史",
+  },
 ];
 
 export const DESTINATION_PORTS: Port[] = [
@@ -84,7 +122,7 @@ export const DESTINATION_PORTS: Port[] = [
     coord: [100.502, 13.7563],
     established: 1782,
     description:
-      "1767 年达信王建吞武里王朝（湄南河西岸），1782 年拉玛一世迁都曼谷。19 世纪中叶起为潮人最重要的目的地，今曼谷耀华力路（唐人街）即潮汕华人聚居核心。",
+      "曼谷建都后继续为南洋最大都会之一。晚清以来耀华力路（唐人街）聚居大量潮汕与闽南华商，形成以潮、闽方言为基础的华人经济与社会网络。",
     source: "泰国潮州会馆",
   },
   {
@@ -94,7 +132,7 @@ export const DESTINATION_PORTS: Port[] = [
     kind: "destination",
     country: "泰南马来亚",
     coord: [101.281, 6.866],
-    description: "暹罗南部早期与潮汕通商的重要据点，红头船航线南端节点。",
+    description: "暹罗南部早期与闽南、潮汕通商的重要据点，红头船与闽南海舶航线南向节点之一。",
     source: "暹罗-潮汕航运史",
   },
   {
@@ -106,7 +144,7 @@ export const DESTINATION_PORTS: Port[] = [
     coord: [103.819, 1.352],
     established: 1819,
     description:
-      "1819 年莱佛士登陆后辟为自由港，潮人随即大量涌入；1830 年代潮帮已主导甘蜜与胡椒种植。今约 45 万潮人。",
+      "1819 年莱佛士登陆后辟为自由港；闽、潮两省移民几乎与开埠同步涌入，形成以福建帮、潮州帮等方言群为主体的种植园商业与商行网络。今约数十万潮裔，更大口径的闽南、闽粤籍华裔人口规模更高。",
     source: "新加坡潮州八邑会馆；维基",
   },
   {
@@ -117,7 +155,8 @@ export const DESTINATION_PORTS: Port[] = [
     country: "马来亚",
     coord: [100.330, 5.414],
     established: 1786,
-    description: "1786 年莱特上校登陆，是马来亚最早的英属殖民港，潮人聚居于乔治市与威省。",
+    description:
+      "1786 年莱特上校登陆，是马来亚最早的英属殖民港之一；闽南、潮汕移民与峇峇土生华人共同塑造了乔治市的街肆与宗祠景观。",
     source: "马来亚华侨史",
   },
   {
@@ -127,7 +166,7 @@ export const DESTINATION_PORTS: Port[] = [
     kind: "destination",
     country: "马来亚",
     coord: [102.249, 2.196],
-    description: "海上丝绸之路古港，明清以来即有潮汕商人定居，多与峇峇娘惹文化融合。",
+    description: "海上丝绸之路古港，明清以来即有闽粤商人定居并与马来世界通婚融合，形成峇峇娘惹等地方华人文化。",
     source: "马来亚华侨史",
   },
   {
@@ -138,7 +177,8 @@ export const DESTINATION_PORTS: Port[] = [
     country: "马来亚 · 柔佛",
     coord: [103.760, 1.4927],
     established: 1855,
-    description: "潮人「港主制度」中心，柔佛胡椒甘蜜港主多为潮汕籍，影响柔佛百年开发史。",
+    description:
+      "英属柔佛开发与「港主制度」下胡椒、甘蜜种植的重心；史实记载港主籍贯以潮、闽、客为主，与海峡殖民地劳工网络紧密相连。",
     source: "柔佛港主史",
   },
   {
@@ -148,7 +188,8 @@ export const DESTINATION_PORTS: Port[] = [
     kind: "destination",
     country: "越南",
     coord: [106.660, 10.762],
-    description: "越南南方最大华人聚居地堤岸，潮汕、广府、福建、客家、海南五帮共聚，潮人主理碾米业。",
+    description:
+      "越南南方最大华人聚居地堤岸一带，闽南、潮州、广府、客家与海南方言群在历史上形成明显的街帮分区，潮人以碾米作坊闻名。",
     source: "越南华侨史",
   },
   {
@@ -158,7 +199,7 @@ export const DESTINATION_PORTS: Port[] = [
     kind: "destination",
     country: "柬埔寨",
     coord: [104.916, 11.562],
-    description: "柬埔寨首都，潮汕华人长期主导大米、橡胶、典当业，今潮人约 50 余万。",
+    description: "柬埔寨首都，闽南与潮汕华商长期主导大米、橡胶种植与典当行，近现代侨汇网路覆盖闽粤侨乡多个县份。",
     source: "柬埔寨华人志",
   },
   {
@@ -169,7 +210,8 @@ export const DESTINATION_PORTS: Port[] = [
     country: "印尼 · 爪哇",
     coord: [106.845, -6.208],
     established: 1619,
-    description: "荷属东印度首都，张弼士最初在此白手起家。潮人多经营椰子、咖啡、橡胶种植与贸易。",
+    description:
+      "荷属东印度首府，蔗糖与香料贸易中枢；闽南、潮汕与客家帮群在历史上长期经营种植园与商行，张弼士等侨领即发迹于此工商业网络。",
     source: "印尼华侨史；张弼士传",
   },
   {
@@ -180,7 +222,8 @@ export const DESTINATION_PORTS: Port[] = [
     country: "印尼 · 苏门答腊",
     coord: [98.672, 3.595],
     established: 1860,
-    description: "苏门答腊东岸烟草、橡胶种植中心，1860 年代后大批潮汕、客家契约华工被运至此地。",
+    description:
+      "苏门答腊东岸烟草、橡胶种植重镇；晚清「猪仔贩运」鼎盛时期有大量闽粤契约华工经新加坡、槟城中转送达。",
     source: "苏门答腊华侨史",
   },
 ];

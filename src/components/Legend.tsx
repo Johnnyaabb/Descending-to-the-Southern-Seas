@@ -19,7 +19,7 @@ export function Legend() {
         ))}
       </div>
       <div className="mt-1.5 border-t border-oldgold/15 pt-1.5 text-[10px] uppercase tracking-widest text-oldgold/80">
-        当代海外潮人估算
+        当代海外潮裔人口参考
       </div>
       <div className="mt-1 grid grid-cols-2 gap-x-3 gap-y-0.5 text-[10.5px]">
         {DIASPORA_SNAPSHOT.map((d) => (
@@ -31,6 +31,9 @@ export function Legend() {
           </div>
         ))}
       </div>
+      <p className="mt-1 leading-snug text-ricepaper/40">
+        列示约数为潮州方言群；闽南华侨多与各地「福建帮」口径合并统计。
+      </p>
     </div>
   );
 }

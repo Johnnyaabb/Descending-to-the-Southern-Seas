@@ -28,11 +28,11 @@ export function MapView({ onMapReady, styleId }: Props) {
     mapRef.current = map;
 
     const fitToScope = () => {
-      // covers Chaoshan (NE) to Sumatra (SW)
+      // Covers southern Fujian + Chaoshan (NE) to Sumatra / Java (SW)
       (map as any).fitBounds(
         [
-          [95, -7],
-          [120, 25],
+          [94.5, -8],
+          [121.8, 26.5],
         ],
         { padding: { top: 60, right: 360, bottom: 180, left: 360 }, duration: 0 }
       );

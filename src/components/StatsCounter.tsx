@@ -56,7 +56,7 @@ export function StatsCounter() {
         <span className="text-xs text-ricepaper/60">人次</span>
       </div>
       <div className="mt-1 text-[10px] text-ricepaper/45">
-        基于《汕头海关志》、广东省侨办、各国华侨史综合估算
+        综合汕头、厦门等口岸文史档案与多国华侨移民史估算示意（闽南与潮汕分支分列）
       </div>
     </motion.div>
   );

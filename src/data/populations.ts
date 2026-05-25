@@ -8,8 +8,8 @@ export interface CountryDiasporaSnapshot {
 }
 
 /**
- * 当代海外潮汕人分布快照（用于地图右下角图例参考与到达港人口规模）
- * 数据：综合汕头侨务系统调查、圭海四记《五大帮人口考》、各国潮州会馆
+ * 当代海外潮州方言族群分布快照（与闽南华侨统计口径分列；图例作潮裔数量级参考）。
+ * 数据：汕头侨务系统调查、圭海四记《五大帮人口考》、各国潮州会馆等。
  */
 export const DIASPORA_SNAPSHOT: CountryDiasporaSnapshot[] = [
   {

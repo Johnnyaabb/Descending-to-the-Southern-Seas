@@ -1,8 +1,9 @@
 /**
- * 潮汕红头船下南洋的真实历史航线 (1684–1949)
+ * 闽南、潮汕先民下南洋的历史航线示意 (1684–1949)
  *
- * 红头船依靠季风（10 月–翌年 3 月 NE 季风南下；5–9 月 SW 季风北归）
- * 沿海岸线导航，途经一系列已知的海上节点。航线参考：
+ * 红头船／洋船依靠季风（10 月–翌年 3 月 NE 季风南下；5–9 月 SW 季风北归）
+ * 沿海岸线导航。闽南海船经台湾海峡南口—粤东—南澳以南海域后，
+ * 与潮汕港口共用南向海道节点。航线参考：
  * - 陈伦炯《海国闻见录》(1730)
  * - 《粤海关志》《汕头海关志》
  * - 张燮《东西洋考》(1617)
@@ -11,22 +12,22 @@
  *
  * 主要海上节点（坐标为大致海道经过点，非陆地）：
  *
- *   南澳岛 → 粤东沿海 → 海南东岸 → 越南中部 (占婆) → 越南南部 (昆仑岛)
+ *   闽南各港→台湾海峡南端/粤东—南澳南口汇合 → 粤东沿海 → 海南东岸 → 越南中部 (占婆) → 越南南部 (昆仑岛)
  *     ├── 绕金瓯角入暹罗湾 → 曼谷 / 北大年
  *     ├── 沿越南河道入西贡-堤岸；上溯湄公河至金边
  *     ├── 沿「内沟」(西沙石塘以西、纳土纳以西) → 阿南巴斯 → 新加坡海峡 → 新加坡 / 新山
  *     ├── 续经马六甲海峡 → 马六甲 / 槟城 / 苏门答腊 (棉兰)
  *     └── 经邦加海峡入爪哇海 → 巴达维亚
  *
- * 注：西沙群岛 (「万里石塘」) 历来是潮汕红头船刻意避开的暗礁禁区，
+ * 注：西沙群岛 (「万里石塘」) 历来是闽粤南洋船刻意避开的暗礁禁区，
  *     《海国闻见录》《东西洋考》皆有明确记载，故航线不经其上。
  */
 
 import type { LngLat } from "../lib/arcGeometry";
 
-// 关键海上节点（lng, lat）—— 用于绘制真实航线
+// 关键海上节点（lng, lat）—— 用于绘制历史海道示意
 const WP = {
-  // 出潮汕：南澳岛南口
+  // 粤东海路汇合点：南澳岛南口（潮汕红头船与闽南下海船汇入南向海段的节点）
   nanao:        [117.20, 22.95] as LngLat,
   // 粤东外海（揭阳-汕尾以南）
   yuedong:      [115.30, 22.10] as LngLat,
@@ -85,6 +86,19 @@ const WP = {
   // 苏门答腊东岸（亚齐外海）
   sumatraE:     [99.20,   3.70] as LngLat,
 };
+
+/** 经度 ≥ 此值的始发坐标视为闽南侧港口（厦泉漳沿海），在共用南向海段前先经台湾海峡南缘—粤东海面衔接至南澳汇合点 */
+export const MINNAN_ORIGIN_LNG_THRESHOLD = 117.48;
+
+function minnanOutboundLeg(from: LngLat): LngLat[] {
+  if (from[0] < MINNAN_ORIGIN_LNG_THRESHOLD) return [];
+  const n = WP.nanao;
+  const t1 = 0.34;
+  const t2 = 0.71;
+  const p1: LngLat = [from[0] * (1 - t1) + n[0] * t1, from[1] * (1 - t1) + n[1] * t1];
+  const p2: LngLat = [from[0] * (1 - t2) + n[0] * t2, from[1] * (1 - t2) + n[1] * t2];
+  return [p1, p2];
+}
 
 // 由 destination 标识到航线途经点的映射（不含起点、终点）。
 // 顺序对应实际海上航向。
@@ -165,5 +179,6 @@ export function seaRouteWaypoints(
 ): LngLat[] {
   const middle = ROUTE_TO_DESTINATION[toId];
   if (!middle) return [fromCoord, toCoord];
-  return [fromCoord, ...middle, toCoord];
+  const leg = minnanOutboundLeg(fromCoord);
+  return [fromCoord, ...leg, ...middle, toCoord];
 }
