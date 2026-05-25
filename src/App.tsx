@@ -1,7 +1,7 @@
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import { HomePage } from "./pages/HomePage";
 import { NanyangMigrationPage } from "./pages/NanyangMigrationPage";
-import { ChuangGuandongPage } from "./pages/ChuangGuandongPage";
+import { ChuangGuandongMigrationPage } from "./pages/ChuangGuandongMigrationPage";
 import { ZouXikouPage } from "./pages/ZouXikouPage";
 
 const basename = import.meta.env.BASE_URL.replace(/\/$/, "");
@@ -12,7 +12,7 @@ export default function App() {
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/nanyang" element={<NanyangMigrationPage />} />
-        <Route path="/chuang-guandong" element={<ChuangGuandongPage />} />
+        <Route path="/chuang-guandong" element={<ChuangGuandongMigrationPage />} />
         <Route path="/zou-xikou" element={<ZouXikouPage />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
