@@ -21,23 +21,24 @@ function PopupCtor(): any {
   return HAS_MAPBOX_TOKEN ? mapboxgl.Popup : maplibregl.Popup;
 }
 
-const ALWAYS_LABELED_ORIGINS = new Set(["zhanglin", "shantou"]);
+const ALWAYS_LABELED_ORIGINS = new Set(["taiyuan", "datong"]);
 
 function createOriginEl(port: Port): HTMLElement {
   const el = document.createElement("div");
   el.className = "cs-origin-marker";
   const showLabel = ALWAYS_LABELED_ORIGINS.has(port.id);
-  const size = port.id === "zhanglin" || port.id === "shantou" ? 30 : 18;
+  const size = port.id === "taiyuan" || port.id === "datong" ? 30 : 18;
   el.innerHTML = `
     <div class="relative flex flex-col items-center" style="transform: translateY(-50%);">
       <svg width="${size}" height="${size}" viewBox="0 0 64 64" style="filter: drop-shadow(0 2px 4px rgba(0,0,0,0.6));">
-        <path d="M6 42h52l-6 12H12L6 42z" fill="#1e3a8a"/>
-        <path d="M10 40h44l-2-6H12l-2 6z" fill="#b22222"/>
-        <rect x="30" y="10" width="4" height="26" fill="#3b2f1f"/>
-        <path d="M34 12l16 8-16 6V12z" fill="#f5e6c8"/>
-        <path d="M30 14l-12 6 12 4V14z" fill="#f5e6c8"/>
+        <rect x="10" y="28" width="44" height="18" rx="2" fill="#5c3d1f" stroke="#1a0c04" stroke-width="1.2"/>
+        <circle cx="18" cy="46" r="4" fill="#2a1a0f" stroke="#1a0c04" stroke-width="0.8"/>
+        <circle cx="32" cy="46" r="4" fill="#2a1a0f" stroke="#1a0c04" stroke-width="0.8"/>
+        <circle cx="46" cy="46" r="4" fill="#2a1a0f" stroke="#1a0c04" stroke-width="0.8"/>
+        <path d="M14 28 Q32 8 50 28" fill="none" stroke="#6b7280" stroke-width="2.5" stroke-linecap="round"/>
+        <rect x="26" y="14" width="12" height="10" rx="1" fill="#b22222" stroke="#3a0a0a" stroke-width="0.9"/>
       </svg>
-      ${showLabel ? `<div style="margin-top:2px; padding:1px 6px; border-radius:3px; background:rgba(178,34,34,0.92); color:#f5e6c8; font-size:10px; font-family:'Noto Serif SC',serif; white-space:nowrap; box-shadow:0 1px 3px rgba(0,0,0,0.6);">${port.name}</div>` : ""}
+      ${showLabel ? `<div style="margin-top:2px; padding:1px 6px; border-radius:3px; background:rgba(92,111,74,0.95); color:#f5e6c8; font-size:10px; font-family:'Noto Serif SC',serif; white-space:nowrap; box-shadow:0 1px 3px rgba(0,0,0,0.6);">${port.name}</div>` : ""}
     </div>
   `;
   return el;
@@ -114,7 +115,7 @@ export function PortMarkers({ map }: Props) {
                <div style="font-family:'Noto Serif SC',serif; font-size:15px; color:#f5e6c8; margin-bottom:4px;">
                  <span style="color:#c8a951;">◆</span> ${port.name} <span style="font-size:11px; opacity:0.7;">(${port.nameEn})</span>
                </div>
-               <div style="font-size:12px; color:#c8a951; margin-bottom:6px;">${port.country}${port.established ? ` · 设港 ${port.established}` : ""}</div>
+               <div style="font-size:12px; color:#c8a951; margin-bottom:6px;">${port.country}${port.established ? ` · 节点 ${port.established}` : ""}</div>
                <div style="font-size:12px; line-height:1.5; color:#f5e6c8cc;">${port.description}</div>
                <div style="margin-top:8px; padding:6px 8px; background:rgba(178,34,34,0.18); border-radius:4px;">
                  <div style="font-size:10px; color:#c8a951; margin-bottom:2px;">截至 ${useTimelineStore.getState().year} 年累计抵达</div>

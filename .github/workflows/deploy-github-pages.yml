@@ -1,9 +1,9 @@
-# 构建并部署到 GitHub Pages（仓库 Settings → Pages → Source: GitHub Actions）
+# 三主题 GitHub Pages：根目录入口 + /nanyang/ + /chuang-guandong/ + /zou-xikou/
 name: Deploy GitHub Pages
 
 on:
   push:
-    branches: [main, master]
+    branches: [main, master, Chuang-Guandong, nanyang, zou_xi_kou]
   workflow_dispatch:
 
 permissions:
@@ -20,32 +20,75 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - uses: actions/setup-node@v4
         with:
           node-version: "20"
           cache: npm
 
-      - name: 设置 Vite base（项目站 / 用户站）
+      - name: 解析仓库 Pages 前缀
         run: |
           REPO="${{ github.event.repository.name }}"
           OWNER="${{ github.repository_owner }}"
           if [ "$REPO" = "${OWNER}.github.io" ]; then
-            echo "用户/组织主页仓库，资源前缀为 /"
-            echo "VITE_BASE=/" >> "$GITHUB_ENV"
+            echo "SITE_ROOT=/" >> "$GITHUB_ENV"
           else
-            echo "项目仓库，资源前缀为 /$REPO/"
-            echo "VITE_BASE=/$REPO/" >> "$GITHUB_ENV"
+            echo "SITE_ROOT=/$REPO/" >> "$GITHUB_ENV"
           fi
 
-      - run: npm ci
-      - run: npm run build
+      - name: 构建「潮汕下南洋」→ /nanyang/
+        run: |
+          git checkout nanyang
+          npm ci
+          npm run build
         env:
+          VITE_BASE: ${{ env.SITE_ROOT }}nanyang/
           VITE_MAPBOX_TOKEN: ${{ secrets.VITE_MAPBOX_TOKEN }}
+
+      - name: 收集 nanyang 产物
+        run: |
+          mkdir -p deploy/nanyang
+          cp -r dist/* deploy/nanyang/
+
+      - name: 构建「闯关东」→ /chuang-guandong/
+        run: |
+          git checkout Chuang-Guandong
+          npm ci
+          npm run build
+        env:
+          VITE_BASE: ${{ env.SITE_ROOT }}chuang-guandong/
+          VITE_MAPBOX_TOKEN: ${{ secrets.VITE_MAPBOX_TOKEN }}
+
+      - name: 收集 chuang-guandong 产物
+        run: |
+          mkdir -p deploy/chuang-guandong
+          cp -r dist/* deploy/chuang-guandong/
+
+      - name: 构建「走西口」→ /zou-xikou/
+        run: |
+          git checkout zou_xi_kou
+          npm ci
+          npm run build
+        env:
+          VITE_BASE: ${{ env.SITE_ROOT }}zou-xikou/
+          VITE_MAPBOX_TOKEN: ${{ secrets.VITE_MAPBOX_TOKEN }}
+
+      - name: 收集 zou-xikou 产物
+        run: |
+          mkdir -p deploy/zou-xikou
+          cp -r dist/* deploy/zou-xikou/
+
+      - name: 根目录入口页
+        run: |
+          git checkout zou_xi_kou
+          cp public/portal/index.html deploy/index.html
+          cp public/.nojekyll deploy/.nojekyll
 
       - uses: actions/upload-pages-artifact@v3
         with:
-          path: dist
+          path: deploy
 
   deploy:
     needs: build

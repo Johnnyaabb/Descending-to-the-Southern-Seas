@@ -1,5 +1,5 @@
 import { PHASES } from "../data/phases";
-import { DIASPORA_SNAPSHOT } from "../data/populations";
+import { REGION_SNAPSHOT } from "../data/populations";
 
 export function Legend() {
   return (
@@ -19,14 +19,14 @@ export function Legend() {
         ))}
       </div>
       <div className="mt-1.5 border-t border-oldgold/15 pt-1.5 text-[10px] uppercase tracking-widest text-oldgold/80">
-        当代海外潮人估算
+        口外聚居估算（民国前后峰值）
       </div>
       <div className="mt-1 grid grid-cols-2 gap-x-3 gap-y-0.5 text-[10.5px]">
-        {DIASPORA_SNAPSHOT.map((d) => (
-          <div key={d.country} className="flex items-baseline justify-between gap-1 leading-tight">
-            <span className="text-ricepaper/75">{d.country}</span>
+        {REGION_SNAPSHOT.map((d) => (
+          <div key={d.region} className="flex items-baseline justify-between gap-1 leading-tight">
+            <span className="text-ricepaper/75">{d.region}</span>
             <span className="font-display text-oldgold">
-              {(d.teochewCount / 10_000).toFixed(0)} 万
+              {(d.stockEstimate / 10_000).toFixed(0)} 万
             </span>
           </div>
         ))}

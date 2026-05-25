@@ -1,9 +1,9 @@
 {
-  "name": "chaoshan-nanyang-migration-map",
+  "name": "zou-xikou-migration-map",
   "private": true,
   "version": "0.1.0",
   "type": "module",
-  "description": "潮汕下南洋历史可视化地图 - Chaoshan migration to Southeast Asia interactive map",
+  "description": "走西口历史迁徙互动地图 — 晋陕冀至漠南、河套时间轴可视化",
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",

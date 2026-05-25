@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>华人迁徙史 · 交互地图</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700&family=Noto+Serif+SC:wght@500;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      * { box-sizing: border-box; margin: 0; padding: 0; }
+      body {
+        min-height: 100vh;
+        font-family: "Noto Sans SC", sans-serif;
+        color: #f5e6c8;
+        background: linear-gradient(145deg, #0a0a0f 0%, #141820 45%, #0c0a08 100%);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 2rem 1.25rem;
+      }
+      h1 {
+        font-family: "Noto Serif SC", serif;
+        font-size: clamp(1.6rem, 4vw, 2.4rem);
+        letter-spacing: 0.12em;
+        margin-bottom: 0.5rem;
+        text-align: center;
+      }
+      .lead {
+        color: rgba(245, 230, 200, 0.65);
+        font-size: 0.95rem;
+        margin-bottom: 2.5rem;
+        text-align: center;
+        max-width: 40rem;
+        line-height: 1.6;
+      }
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+        gap: 1.25rem;
+        width: min(960px, 100%);
+      }
+      a.card {
+        display: block;
+        text-decoration: none;
+        color: inherit;
+        border: 1px solid rgba(200, 169, 81, 0.35);
+        border-radius: 12px;
+        padding: 1.5rem 1.25rem;
+        background: rgba(0, 0, 0, 0.45);
+        backdrop-filter: blur(8px);
+        transition: border-color 0.2s, transform 0.2s, box-shadow 0.2s;
+      }
+      a.card:hover {
+        border-color: rgba(200, 169, 81, 0.75);
+        transform: translateY(-3px);
+        box-shadow: 0 12px 32px rgba(0, 0, 0, 0.45);
+      }
+      .card h2 {
+        font-family: "Noto Serif SC", serif;
+        font-size: 1.35rem;
+        color: #c8a951;
+        margin-bottom: 0.5rem;
+      }
+      .card p {
+        font-size: 0.875rem;
+        line-height: 1.55;
+        color: rgba(245, 230, 200, 0.78);
+      }
+      .tag {
+        display: inline-block;
+        margin-top: 0.85rem;
+        font-size: 0.75rem;
+        padding: 0.2rem 0.55rem;
+        border-radius: 999px;
+        border: 1px solid rgba(92, 111, 74, 0.55);
+        color: rgba(245, 230, 200, 0.85);
+      }
+      .tag.sea { border-color: rgba(178, 34, 34, 0.5); }
+      .tag.north { border-color: rgba(30, 58, 138, 0.55); }
+      footer {
+        margin-top: 2.5rem;
+        font-size: 0.75rem;
+        color: rgba(245, 230, 200, 0.4);
+      }
+    </style>
+  </head>
+  <body>
+    <h1>华人迁徙史 · 交互地图</h1>
+    <p class="lead">
+      三大移民潮各自独立部署：拖动时间轴，在地图上观看历史路线、关键事件与人口规模变化。
+    </p>
+    <div class="grid">
+      <a class="card" href="nanyang/">
+        <h2>潮汕下南洋</h2>
+        <p>从樟林、汕头等潮汕港口出发，经红头船与近代轮船抵达暹罗、马来亚、新加坡、印尼等地。</p>
+        <span class="tag sea">1684 – 1949</span>
+      </a>
+      <a class="card" href="chuang-guandong/">
+        <h2>闯关东</h2>
+        <p>华北贫民出山海关或渡渤海海峡，进入辽宁、吉林、黑龙江，形成近代东北人口格局。</p>
+        <span class="tag north">1644 – 1949</span>
+      </a>
+      <a class="card" href="zou-xikou/">
+        <h2>走西口</h2>
+        <p>晋陕冀民众经杀虎口、河曲古渡等出关，进入土默川、河套与包头，形成晋商与河套移民史。</p>
+        <span class="tag">1650 – 1949</span>
+      </a>
+    </div>
+    <footer>GitHub Pages · Johnnyaabb / Descending-to-the-Southern-Seas</footer>
+  </body>
+</html>

@@ -86,7 +86,7 @@ export function TimeSlider() {
           onClick={reset}
           aria-label="重置"
           className="flex h-6 w-6 items-center justify-center rounded-full border border-oldgold/40 bg-black/40 text-ricepaper/85 transition hover:bg-black/70 hover:text-oldgold"
-          title="重置到 1684 年"
+          title="重置到 1650 年"
         >
           <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor">
             <path d="M12 5V2L7 6l5 4V7a5 5 0 11-5 5H5a7 7 0 107-7z" />
@@ -300,8 +300,8 @@ export function TimeSlider() {
 
         {/* Endpoint labels */}
         <div className="mt-px flex justify-between text-[10px] leading-tight text-ricepaper/45">
-          <span>{TIMELINE_MIN} 康熙</span>
-          <span>{TIMELINE_MAX} 民国终结</span>
+          <span>{TIMELINE_MIN} 清前期</span>
+          <span>{TIMELINE_MAX} 民国落幕</span>
         </div>
       </div>
     </div>

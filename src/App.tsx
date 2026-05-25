@@ -28,7 +28,7 @@ export default function App() {
     if (!dest || !mapRef.current) return;
     (mapRef.current as any).flyTo({
       center: dest.coord,
-      zoom: 4.2,
+      zoom: 5.4,
       speed: 0.7,
       curve: 1.6,
     });
@@ -49,10 +49,10 @@ export default function App() {
           className="flex items-center gap-3"
         >
           <h1 className="font-display text-2xl font-bold leading-none tracking-widest text-ricepaper md:text-3xl">
-            潮汕人下南洋历史迁徙地图
+            走西口历史迁徙地图
           </h1>
           <span className="hidden text-sm leading-none text-oldgold md:inline">
-            一份 1684–1949 年的潮人迁徙地图
+            三大移民潮之一：晋陕冀经西口至漠南—河套（1650–1949）
           </span>
         </motion.div>
         <div className="flex items-center gap-2 text-[11px] text-ricepaper/50">

@@ -4,7 +4,7 @@ import { useTimelineStore } from "../store/useTimelineStore";
 import { ALL_PORTS } from "../data/ports";
 import { FLOWS, flowsActiveAt } from "../data/flows";
 import { pointAlongArc, smoothRouteLine, lineStringLengthKm, type LngLat } from "../lib/arcGeometry";
-import { seaRouteWaypoints } from "../data/seaRoutes";
+import { landRouteWaypoints } from "../data/landRoutes";
 import type { MapboxLike } from "../lib/mapInstance";
 import { HAS_MAPBOX_TOKEN } from "../lib/mapInstance";
 import { registerMigrationOverlayRestore } from "../lib/migrationOverlayBus";
@@ -16,14 +16,12 @@ const ARC_LABEL_SOURCE = "arcs-label-src";
 const ARC_LABEL_LAYER = "arcs-label";
 const PARTICLE_SOURCE = "particles-src";
 const PARTICLE_LAYER = "particles-layer";
-const SHIP_ICON_ID = "redhead-ship";
+const CARAVAN_ICON_ID = "xikou-camel";
 
 /**
- * Build a "红头船" (red-head ship) icon as ImageData.
- * The boat is drawn with the bow pointing UP (=北/0°), so the map's
- * `icon-rotate` can directly receive the travel bearing in degrees.
+ * 简易「骆驼 + 货囊」图标，鼻尖朝上以便使用航线 bearing 作为 `icon-rotate`。
  */
-function makeShipImage(size = 64): ImageData {
+function makeCamelCaravanImage(size = 64): ImageData {
   const canvas = document.createElement("canvas");
   canvas.width = size;
   canvas.height = size;
@@ -32,77 +30,74 @@ function makeShipImage(size = 64): ImageData {
   ctx.scale(s, s);
   ctx.lineJoin = "round";
 
-  // Outer glow + dark hull outline so it stands out against the dashed line
   ctx.shadowColor = "rgba(0,0,0,0.85)";
   ctx.shadowBlur = 3;
   ctx.shadowOffsetY = 1;
 
-  // Hull (warm wood color)
-  ctx.fillStyle = "#e8c581";
-  ctx.strokeStyle = "#221408";
-  ctx.lineWidth = 1.4;
+  // Pack / saddle bags
+  ctx.fillStyle = "#8b5a2b";
+  ctx.strokeStyle = "#1a0c04";
+  ctx.lineWidth = 1;
   ctx.beginPath();
-  ctx.moveTo(16, 2.5);
-  ctx.bezierCurveTo(22, 7, 23, 13, 23, 18);
-  ctx.lineTo(23, 25);
-  ctx.bezierCurveTo(23, 28, 20, 30, 16, 30);
-  ctx.bezierCurveTo(12, 30, 9, 28, 9, 25);
-  ctx.lineTo(9, 18);
-  ctx.bezierCurveTo(9, 13, 10, 7, 16, 2.5);
+  ctx.rect(6, 18, 9, 10);
+  ctx.fill();
+  ctx.stroke();
+  ctx.beginPath();
+  ctx.rect(18.5, 18, 9, 10);
+  ctx.fill();
+  ctx.stroke();
+
+  // Body
+  ctx.fillStyle = "#d4a574";
+  ctx.strokeStyle = "#3a2412";
+  ctx.lineWidth = 1.35;
+  ctx.beginPath();
+  ctx.ellipse(16, 19, 11, 6.2, 0, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.stroke();
+
+  // Neck + head (pointing up)
+  ctx.fillStyle = "#d4a574";
+  ctx.strokeStyle = "#3a2412";
+  ctx.beginPath();
+  ctx.moveTo(15, 14);
+  ctx.quadraticCurveTo(14, 8, 16, 4);
+  ctx.lineTo(17.5, 4);
+  ctx.quadraticCurveTo(19, 8, 17, 14);
   ctx.closePath();
   ctx.fill();
   ctx.stroke();
-  ctx.shadowBlur = 0;
-  ctx.shadowOffsetY = 0;
 
-  // Signature red bow ("红头")
-  ctx.fillStyle = "#c2261d";
-  ctx.strokeStyle = "#5a1010";
+  // Snout
+  ctx.fillStyle = "#c9905e";
+  ctx.beginPath();
+  ctx.ellipse(16.75, 4.6, 2.2, 1.5, 0, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.stroke();
+
+  // Hump
+  ctx.fillStyle = "#c58b58";
+  ctx.beginPath();
+  ctx.ellipse(12.5, 14.5, 4, 3.2, -0.35, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.stroke();
+
+  // Leg hints
+  ctx.strokeStyle = "#2b1a0d";
   ctx.lineWidth = 1.1;
   ctx.beginPath();
-  ctx.moveTo(16, 2.5);
-  ctx.bezierCurveTo(22, 7, 23, 12, 23, 14);
-  ctx.lineTo(9, 14);
-  ctx.bezierCurveTo(9, 12, 10, 7, 16, 2.5);
-  ctx.closePath();
-  ctx.fill();
+  ctx.moveTo(10, 24);
+  ctx.lineTo(9, 29);
+  ctx.moveTo(14.5, 24);
+  ctx.lineTo(14, 29);
+  ctx.moveTo(17.5, 24);
+  ctx.lineTo(18, 29);
+  ctx.moveTo(22, 24);
+  ctx.lineTo(23, 29);
   ctx.stroke();
 
-  // Gold stripe between red head and hull
-  ctx.fillStyle = "#f5cb53";
-  ctx.fillRect(9, 14, 14, 1.4);
-
-  // Wooden cabin
-  ctx.fillStyle = "#6b3b16";
-  ctx.strokeStyle = "#1a0c04";
-  ctx.lineWidth = 0.8;
-  ctx.beginPath();
-  ctx.rect(12.5, 17, 7, 6);
-  ctx.fill();
-  ctx.stroke();
-
-  // Vertical mast
-  ctx.fillStyle = "#1a0c04";
-  ctx.fillRect(15.55, 15, 0.9, 9.5);
-
-  // Triangular sail catching the monsoon wind
-  ctx.fillStyle = "rgba(255, 248, 224, 0.95)";
-  ctx.strokeStyle = "rgba(34, 20, 8, 0.85)";
-  ctx.lineWidth = 0.8;
-  ctx.beginPath();
-  ctx.moveTo(16, 15.5);
-  ctx.lineTo(21.5, 23);
-  ctx.lineTo(10.5, 23);
-  ctx.closePath();
-  ctx.fill();
-  ctx.stroke();
-
-  // A tiny wake at the stern
-  ctx.fillStyle = "rgba(245, 230, 200, 0.6)";
-  ctx.beginPath();
-  ctx.ellipse(16, 30.2, 2.4, 0.8, 0, 0, Math.PI * 2);
-  ctx.fill();
-
+  ctx.shadowBlur = 0;
+  ctx.shadowOffsetY = 0;
   ctx.setTransform(1, 0, 0, 1, 0, 0);
   return ctx.getImageData(0, 0, size, size);
 }
@@ -136,7 +131,7 @@ export function MigrationArcs({ map }: Props) {
   const arcCacheRef = useRef<Map<string, ArcCache>>(new Map());
   const hoverRef = useRef<{ enter: () => void; leave: () => void } | null>(null);
 
-  // Build & cache realistic historical sea routes once.
+  // Build & cache historical overland corridors once.
   const arcMap = useMemo(() => {
     const cache = new Map<string, ArcCache>();
     const portById = new Map(ALL_PORTS.map((p) => [p.id, p]));
@@ -144,9 +139,10 @@ export function MigrationArcs({ map }: Props) {
       const from = portById.get(f.fromId);
       const to = portById.get(f.toId);
       if (!from || !to) continue;
-      const waypoints = seaRouteWaypoints(
+      const waypoints = landRouteWaypoints(
         from.coord as LngLat,
         to.coord as LngLat,
+        f.fromId,
         f.toId,
       );
       const line = smoothRouteLine(waypoints, 14);
@@ -231,9 +227,9 @@ export function MigrationArcs({ map }: Props) {
         } as any);
       }
 
-      if (!(map as any).hasImage?.(SHIP_ICON_ID)) {
+      if (!(map as any).hasImage?.(CARAVAN_ICON_ID)) {
         try {
-          (map as any).addImage(SHIP_ICON_ID, makeShipImage(64), { pixelRatio: 2 });
+          (map as any).addImage(CARAVAN_ICON_ID, makeCamelCaravanImage(64), { pixelRatio: 2 });
         } catch {
           /* duplicate add */
         }
@@ -249,7 +245,7 @@ export function MigrationArcs({ map }: Props) {
           type: "symbol",
           source: PARTICLE_SOURCE,
           layout: {
-            "icon-image": SHIP_ICON_ID,
+            "icon-image": CARAVAN_ICON_ID,
             "icon-size": ["interpolate", ["linear"], ["get", "size"], 0, 0.7, 1, 1.05],
             "icon-rotate": ["get", "bearing"],
             "icon-rotation-alignment": "map",
@@ -263,7 +259,7 @@ export function MigrationArcs({ map }: Props) {
         } as any);
       }
 
-      // Distance labels: own source + add *above* ship particles so text is not covered.
+      // Distance labels: own source + add *above* caravan icons so text is not covered.
       if (!map.getSource(ARC_LABEL_SOURCE)) {
         map.addSource(ARC_LABEL_SOURCE, {
           type: "geojson",
@@ -355,7 +351,7 @@ export function MigrationArcs({ map }: Props) {
       const activeIds = new Set(active.map((f) => f.id));
       const playSpeed = useTimelineStore.getState().speed;
 
-      // Add ships up to a target count per active flow. Heavier flows carry more boats.
+      // Add caravans up to a target count per active flow. Heavier flows carry more icons.
       for (const f of active) {
         const cache = arcCacheRef.current.get(f.id);
         if (!cache) continue;
@@ -373,7 +369,7 @@ export function MigrationArcs({ map }: Props) {
           });
         }
       }
-      // Drop ships whose flow is no longer active.
+      // Drop caravans whose flow is no longer active.
       for (let i = particles.length - 1; i >= 0; i--) {
         if (!activeIds.has(particles[i].flowId)) particles.splice(i, 1);
       }
@@ -504,16 +500,16 @@ function buildArcFeaturesForYear(
 
 function colorForPhase(phaseId: string): string {
   switch (phaseId) {
-    case "openSea":
-      return "#7e8d52";
-    case "redShipPeak":
-      return "#c08a3c";
-    case "shantouTreaty":
+    case "earlyQing":
+      return "#5c6f4a";
+    case "merchantPeak":
+      return "#a67c34";
+    case "crisisOpen":
       return "#b22222";
-    case "republic":
-      return "#3b82f6";
+    case "railEra":
+      return "#2563eb";
     case "warEnd":
-      return "#7f7f7f";
+      return "#6b6b6b";
     default:
       return "#f5e6c8";
   }

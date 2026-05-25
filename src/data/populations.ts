@@ -1,66 +1,54 @@
-export interface CountryDiasporaSnapshot {
-  country: string;
+export interface RegionSnapshot {
+  region: string;
   destinationIds: string[];
-  modernTotal: number;
-  teochewCount: number;
-  share: string;
+  stockEstimate: number;
+  shareNote: string;
   source: string;
 }
 
 /**
- * 当代海外潮汕人分布快照（用于地图右下角图例参考与到达港人口规模）
- * 数据：综合汕头侨务系统调查、圭海四记《五大帮人口考》、各国潮州会馆
+ * 晚清—民国口外晋陕裔聚落估算（学界多为区间推断，用于图例对比，非普查数字）。
  */
-export const DIASPORA_SNAPSHOT: CountryDiasporaSnapshot[] = [
+export const REGION_SNAPSHOT: RegionSnapshot[] = [
   {
-    country: "泰国",
-    destinationIds: ["bangkok", "pattani"],
-    modernTotal: 8_000_000,
-    teochewCount: 3_920_000,
-    share: "占泰国华侨总数 56%",
-    source: "汕头侨务系统调查；圭海四记",
+    region: "土默川（归绥平原）",
+    destinationIds: ["hohhot", "baotou"],
+    stockEstimate: 680_000,
+    shareNote: "城镇从业 + 近郊农垦人口主体",
+    source: "呼和浩特、包头旧志人口推算",
   },
   {
-    country: "印尼",
-    destinationIds: ["batavia", "medan"],
-    modernTotal: 3_000_000,
-    teochewCount: 740_000,
-    share: "苏门答腊东岸最集中",
-    source: "汕头侨务系统调查",
+    region: "后套—五原灌区",
+    destinationIds: ["wuyuan"],
+    stockEstimate: 320_000,
+    shareNote: "丁戊奇荒后聚落爆发式增高",
+    source: "河套农垦史",
   },
   {
-    country: "马来西亚",
-    destinationIds: ["penang", "malacca", "johorbahru"],
-    modernTotal: 800_000,
-    teochewCount: 740_000,
-    share: "柔佛港主制度遗产显著",
-    source: "汕头侨务系统调查",
+    region: "鄂尔多斯台地",
+    destinationIds: ["ordos"],
+    stockEstimate: 210_000,
+    shareNote: "半农半牧与季节工并存",
+    source: "伊克昭盟档案研究",
   },
   {
-    country: "新加坡",
-    destinationIds: ["singapore"],
-    modernTotal: 450_000,
-    teochewCount: 720_000,
-    share: "潮帮居新加坡华人五大方言群第二",
-    source: "新加坡潮州八邑会馆",
+    region: "察哈尔—乌兰察布",
+    destinationIds: ["jining"],
+    stockEstimate: 190_000,
+    shareNote: "京绥铁路车站经济带",
+    source: "京绥铁路社会经济史",
   },
   {
-    country: "越南",
-    destinationIds: ["saigon"],
-    modernTotal: 250_000,
-    teochewCount: 476_000,
-    share: "西贡-堤岸最集中",
-    source: "汕头侨务系统调查",
-  },
-  {
-    country: "柬埔寨",
-    destinationIds: ["phnompenh"],
-    modernTotal: 200_000,
-    teochewCount: 539_000,
-    share: "潮人占柬华八成以上",
-    source: "汕头侨务系统调查",
+    region: "宁夏引黄灌区",
+    destinationIds: ["yinchuan"],
+    stockEstimate: 140_000,
+    shareNote: "西口西路移民与回民商贩交汇",
+    source: "宁夏移民史",
   },
 ];
 
-export const GLOBAL_TEOCHEW_TOTAL = 60_000_000; // 全球潮籍人士 ~6000 万
-export const OVERSEAS_TEOCHEW_TOTAL = 20_000_000; // 海外潮人 ~2000 万
+/** 保守折算：20 世纪中叶晋陕冀走西口后裔人口量级（示意） */
+export const XIKOU_DESCENDANT_ESTIMATE = 3_500_000;
+
+/** 史料中偶见的清代—民国累计走西口人次上限（学术争议大，仅作宏观框定） */
+export const XIKOU_CUMULATIVE_CEILING = 5_000_000;

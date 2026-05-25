@@ -48,7 +48,7 @@ export function StatsCounter() {
       transition={{ duration: 0.4 }}
     >
       <div className="text-[11px] uppercase tracking-widest text-oldgold/80">
-        截至 {year} 年累计出洋
+        截至 {year} 年累计走口外（估算）
       </div>
       <div className="mt-1 flex items-baseline gap-2">
         <span className="font-display text-3xl font-bold text-ricepaper">{value}</span>
@@ -56,7 +56,7 @@ export function StatsCounter() {
         <span className="text-xs text-ricepaper/60">人次</span>
       </div>
       <div className="mt-1 text-[10px] text-ricepaper/45">
-        基于《汕头海关志》、广东省侨办、各国华侨史综合估算
+        综合地方志、移民史与人口史研究折算，仅作相对规模演示
       </div>
     </motion.div>
   );

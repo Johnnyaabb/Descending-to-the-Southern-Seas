@@ -20,19 +20,19 @@ export function MapView({ onMapReady, styleId }: Props) {
     if (!containerRef.current || mapRef.current) return;
     const { map } = createMap({
       container: containerRef.current,
-      center: [110, 13.5],
-      zoom: 3.5,
+      center: [111.2, 41],
+      zoom: 4.6,
       bearing: 0,
       pitch: 0,
     });
     mapRef.current = map;
 
     const fitToScope = () => {
-      // covers Chaoshan (NE) to Sumatra (SW)
+      // 晋陕冀—漠南—河套走廊
       (map as any).fitBounds(
         [
-          [95, -7],
-          [120, 25],
+          [96, 36],
+          [119.5, 44.5],
         ],
         { padding: { top: 60, right: 360, bottom: 180, left: 360 }, duration: 0 }
       );
