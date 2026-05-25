@@ -1,9 +1,7 @@
-# 三主题 GitHub Pages：根目录入口 + /nanyang/ + /chuang-guandong/ + /zou-xikou/
+# 与 main 同步：主页 SPA + /zou-xikou/ 静态站（避免单独 push 本分支时覆盖整站）
 name: Deploy GitHub Pages
 
 on:
-  push:
-    branches: [main, master, Chuang-Guandong, nanyang, zou_xi_kou]
   workflow_dispatch:
 
 permissions:
@@ -28,7 +26,7 @@ jobs:
           node-version: "20"
           cache: npm
 
-      - name: 解析仓库 Pages 前缀
+      - name: 解析 Pages 前缀
         run: |
           REPO="${{ github.event.repository.name }}"
           OWNER="${{ github.repository_owner }}"
@@ -38,33 +36,20 @@ jobs:
             echo "SITE_ROOT=/$REPO/" >> "$GITHUB_ENV"
           fi
 
-      - name: 构建「潮汕下南洋」→ /nanyang/
+      - name: 构建主页 SPA（main）
         run: |
-          git checkout nanyang
+          git checkout main
           npm ci
           npm run build
         env:
-          VITE_BASE: ${{ env.SITE_ROOT }}nanyang/
+          VITE_BASE: ${{ env.SITE_ROOT }}
           VITE_MAPBOX_TOKEN: ${{ secrets.VITE_MAPBOX_TOKEN }}
 
-      - name: 收集 nanyang 产物
+      - name: 收集 SPA 产物
         run: |
-          mkdir -p deploy/nanyang
-          cp -r dist/* deploy/nanyang/
-
-      - name: 构建「闯关东」→ /chuang-guandong/
-        run: |
-          git checkout Chuang-Guandong
-          npm ci
-          npm run build
-        env:
-          VITE_BASE: ${{ env.SITE_ROOT }}chuang-guandong/
-          VITE_MAPBOX_TOKEN: ${{ secrets.VITE_MAPBOX_TOKEN }}
-
-      - name: 收集 chuang-guandong 产物
-        run: |
-          mkdir -p deploy/chuang-guandong
-          cp -r dist/* deploy/chuang-guandong/
+          mkdir -p deploy
+          cp -r dist/* deploy/
+          cp public/.nojekyll deploy/.nojekyll 2>/dev/null || echo > deploy/.nojekyll
 
       - name: 构建「走西口」→ /zou-xikou/
         run: |
@@ -79,12 +64,6 @@ jobs:
         run: |
           mkdir -p deploy/zou-xikou
           cp -r dist/* deploy/zou-xikou/
-
-      - name: 根目录入口页
-        run: |
-          git checkout zou_xi_kou
-          cp public/portal/index.html deploy/index.html
-          cp public/.nojekyll deploy/.nojekyll
 
       - uses: actions/upload-pages-artifact@v3
         with:
