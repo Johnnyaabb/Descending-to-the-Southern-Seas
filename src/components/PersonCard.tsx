@@ -22,7 +22,7 @@ export function PersonCard({ onFocusPerson }: Props) {
     <div className="panel mr-3 mt-3 flex min-h-[120px] w-[320px] flex-1 flex-col overflow-hidden rounded-xl px-4 py-3">
       <div className="mb-2 flex items-center justify-between">
         <div className="text-[11px] uppercase tracking-widest text-oldgold/80">
-          华侨群像 · {featured.length} 人
+          历史人物 · {featured.length} 人
         </div>
         <div className="text-[10px] text-emerald-300/70">
           {aliveCount > 0 ? `${aliveCount} 人在世` : "尚未出生"}
@@ -92,7 +92,7 @@ export function PersonCard({ onFocusPerson }: Props) {
                       {p.story}
                     </div>
                     <div className="mt-2 flex items-center gap-2 text-[10.5px] text-oldgold/80">
-                      <span className="chip">出洋 {p.emigrateYear}</span>
+                      <span className="chip">北上 {p.emigrateYear}</span>
                       {dest && (
                         <span className="chip">→ {dest.name}（{dest.country}）</span>
                       )}

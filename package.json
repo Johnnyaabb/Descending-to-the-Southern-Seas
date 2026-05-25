@@ -3,7 +3,7 @@
   "private": true,
   "version": "0.1.0",
   "type": "module",
-  "description": "潮汕下南洋历史可视化地图 - Chaoshan migration to Southeast Asia interactive map",
+  "description": "闯关东历史可视化地图 — interactive North China → Northeast China migration map",
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",

@@ -21,13 +21,13 @@ function PopupCtor(): any {
   return HAS_MAPBOX_TOKEN ? mapboxgl.Popup : maplibregl.Popup;
 }
 
-const ALWAYS_LABELED_ORIGINS = new Set(["zhanglin", "shantou"]);
+const ALWAYS_LABELED_ORIGINS = new Set(["shanhaiguan", "yantai"]);
 
 function createOriginEl(port: Port): HTMLElement {
   const el = document.createElement("div");
   el.className = "cs-origin-marker";
   const showLabel = ALWAYS_LABELED_ORIGINS.has(port.id);
-  const size = port.id === "zhanglin" || port.id === "shantou" ? 30 : 18;
+  const size = port.id === "shanhaiguan" || port.id === "yantai" ? 30 : 18;
   el.innerHTML = `
     <div class="relative flex flex-col items-center" style="transform: translateY(-50%);">
       <svg width="${size}" height="${size}" viewBox="0 0 64 64" style="filter: drop-shadow(0 2px 4px rgba(0,0,0,0.6));">

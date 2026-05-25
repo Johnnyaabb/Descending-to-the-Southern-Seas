@@ -4,7 +4,7 @@ import { useTimelineStore } from "../store/useTimelineStore";
 import { ALL_PORTS } from "../data/ports";
 import { FLOWS, flowsActiveAt } from "../data/flows";
 import { pointAlongArc, smoothRouteLine, lineStringLengthKm, type LngLat } from "../lib/arcGeometry";
-import { seaRouteWaypoints } from "../data/seaRoutes";
+import { migrationRouteWaypoints } from "../data/migrationRoutes";
 import type { MapboxLike } from "../lib/mapInstance";
 import { HAS_MAPBOX_TOKEN } from "../lib/mapInstance";
 import { registerMigrationOverlayRestore } from "../lib/migrationOverlayBus";
@@ -144,9 +144,10 @@ export function MigrationArcs({ map }: Props) {
       const from = portById.get(f.fromId);
       const to = portById.get(f.toId);
       if (!from || !to) continue;
-      const waypoints = seaRouteWaypoints(
+      const waypoints = migrationRouteWaypoints(
         from.coord as LngLat,
         to.coord as LngLat,
+        f.fromId,
         f.toId,
       );
       const line = smoothRouteLine(waypoints, 14);
@@ -513,7 +514,7 @@ function colorForPhase(phaseId: string): string {
     case "republic":
       return "#3b82f6";
     case "warEnd":
-      return "#7f7f7f";
+      return "#64748b";
     default:
       return "#f5e6c8";
   }

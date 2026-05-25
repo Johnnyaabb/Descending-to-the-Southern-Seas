@@ -13,7 +13,7 @@ export function NarrativePanel() {
   );
 
   return (
-    <div className="panel flex h-full max-h-full min-h-0 w-[330px] max-w-full flex-col overflow-hidden rounded-xl">
+    <div className="panel flex h-full max-h-full min-h-0 w-[min(330px,calc(100vw-1.75rem))] max-w-[calc(100vw-1.75rem)] flex-col overflow-hidden rounded-xl">
       {/* Phase header */}
       <div
         className="shrink-0 px-5 py-4"

@@ -28,7 +28,7 @@ export default function App() {
     if (!dest || !mapRef.current) return;
     (mapRef.current as any).flyTo({
       center: dest.coord,
-      zoom: 4.2,
+      zoom: 5,
       speed: 0.7,
       curve: 1.6,
     });
@@ -36,27 +36,27 @@ export default function App() {
   }, []);
 
   return (
-    <div className="relative flex h-screen w-screen flex-col overflow-hidden">
+    <div className="relative flex h-[100dvh] min-h-0 w-screen max-w-[100vw] flex-col overflow-x-hidden">
       {/* Background ink wash */}
       <div className="pointer-events-none fixed inset-0 -z-10 bg-gradient-to-br from-[#0a0a0f] via-[#0e1116] to-[#0a0a0a]" />
 
-      {/* Header */}
-      <header className="z-20 flex items-center justify-between px-5 py-3">
+      {/* Header：不参与 overflow:hidden，避免地图样式下拉菜单被裁剪 */}
+      <header className="relative z-30 flex shrink-0 flex-wrap items-center justify-between gap-x-3 gap-y-2 px-4 py-3 pt-[max(0.75rem,env(safe-area-inset-top))] sm:px-5">
         <motion.div
           initial={{ y: -10, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ duration: 0.5 }}
-          className="flex items-center gap-3"
+          className="flex min-w-0 flex-1 flex-col gap-1 sm:flex-row sm:items-end sm:gap-3"
         >
-          <h1 className="font-display text-2xl font-bold leading-none tracking-widest text-ricepaper md:text-3xl">
-            潮汕人下南洋历史迁徙地图
+          <h1 className="font-display text-xl font-bold leading-tight tracking-wide text-ricepaper sm:text-2xl md:text-3xl md:tracking-widest">
+            闯关东历史迁徙地图
           </h1>
-          <span className="hidden text-sm leading-none text-oldgold md:inline">
-            一份 1684–1949 年的潮人迁徙地图
+          <span className="hidden text-xs leading-snug text-oldgold lg:inline xl:text-sm">
+            一份 1644–1949 年的华北→关东移民可视化时间轴
           </span>
         </motion.div>
-        <div className="flex items-center gap-2 text-[11px] text-ricepaper/50">
-          <span className="hidden md:inline">键盘 ← → 拖动 · 空格播放</span>
+        <div className="flex shrink-0 flex-wrap items-center justify-end gap-2 text-[11px] text-ricepaper/50">
+          <span className="hidden lg:inline">键盘 ← → 拖动 · 空格播放</span>
           {!HAS_MAPBOX_TOKEN && (
             <MapStyleSwitcher currentId={styleId} onChange={setStyleId} />
           )}
@@ -72,7 +72,7 @@ export default function App() {
       </header>
 
       {/* Main: side panels overlay over the map */}
-      <main className="relative z-10 flex min-h-0 flex-1">
+      <main className="relative z-10 flex min-h-0 flex-1 overflow-hidden">
         <div className="absolute inset-0">
           <MapView onMapReady={handleMapReady} styleId={styleId} />
         </div>
@@ -107,7 +107,7 @@ export default function App() {
       </main>
 
       {/* Footer: time slider */}
-      <footer className="z-20">
+      <footer className="relative z-20 shrink-0 pb-[env(safe-area-inset-bottom)]">
         <TimeSlider />
       </footer>
     </div>

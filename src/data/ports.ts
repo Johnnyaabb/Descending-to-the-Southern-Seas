@@ -6,182 +6,179 @@ export interface Port {
   nameEn: string;
   kind: PortKind;
   country: string;
+  /** WGS-84 [lng, lat]，标注具体历史地标（关隘/港区/铁路枢纽） */
   coord: [number, number];
   established?: number;
   description: string;
   source: string;
 }
 
+/**
+ * 闯关出发地与华北集散枢纽。
+ * 坐标取关隘、港区、铁路枢纽等实际节点，而非仅行政中心。
+ */
 export const ORIGIN_PORTS: Port[] = [
   {
-    id: "zhanglin",
-    name: "樟林古港",
-    nameEn: "Zhanglin Port",
+    id: "shanhaiguan",
+    name: "山海关",
+    nameEn: "Shanhai Pass",
     kind: "origin",
-    country: "潮汕 · 澄海",
-    /** 樟林古港遗址公园一带（OSM: Zhanglin Ancient Port Park，WGS-84） */
-    coord: [116.82385, 23.56282],
-    established: 1684,
+    country: "直隶 · 秦皇岛境",
+    /** 天下第一关城楼（明长城东端关隘，WGS-84） */
+    coord: [119.7542, 40.0114],
+    established: 1381,
     description:
-      "「红头船故乡」，清代粤东第一大港。第一艘红头船从这里驶出，全盛时拥船队 40 余支。在泰国 150 万先侨中约六成由此扬帆。",
-    source: "维基百科；澄海县志",
+      "明长城东端「天下第一关」，清代以来华北陆路进入关东的必经关隘。民谣所谓「闯关东」即指出此关——近代京奉铁路关城车站与关楼毗邻，是陆路闯关最象征性的出发点。",
+    source: "维基百科·山海关；OpenStreetMap 关城节点",
   },
   {
-    id: "shantou",
-    name: "汕头港",
-    nameEn: "Shantou Port",
+    id: "yantai",
+    name: "烟台港",
+    nameEn: "Yantai Port",
     kind: "origin",
-    country: "潮汕 · 汕头",
-    /** 汕头中心城区/商埠代表点（市政府一带，WGS-84） */
-    coord: [116.708, 23.354],
+    country: "山东 · 胶东半岛",
+    /** 芝罘湾港区（近代通商口岸核心，WGS-84） */
+    coord: [121.393, 37.541],
+    established: 1861,
+    description:
+      "第二次鸦片战争后辟为通商口岸，芝罘湾迅速成为胶东闯关渡渤海第一大港。晚清民国数百万山东移民由此乘船抵大连、营口、安东等辽东口岸，航程约 100–150 海里，是海路闯关主通道。",
+    source: "烟台港志；维基百科·烟台开埠",
+  },
+  {
+    id: "weihai",
+    name: "威海港",
+    nameEn: "Weihai Port",
+    kind: "origin",
+    country: "山东 · 胶东半岛",
+    /** 威海港客运/老港区一带（WGS-84） */
+    coord: [122.158, 37.509],
+    established: 1898,
+    description:
+      "英租威海卫时期港口与渔业航运发达，胶东东部（文登、荣成等）闯关者多由此泛海北上，或换乘烟台—大连航线，与烟台构成胶东「双港出海」格局。",
+    source: "威海市志·港口航运篇",
+  },
+  {
+    id: "jinan",
+    name: "济南",
+    nameEn: "Jinan",
+    kind: "origin",
+    country: "山东 · 腹地枢纽",
+    /** 济南站（胶济铁路北端枢纽，WGS-84） */
+    coord: [116.991, 36.668],
+    description:
+      "山东省会与胶济铁路北端枢纽，鲁西、鲁南、鲁中闯关者在北上津浦线转京奉线之前的重要集散地；灾荒年份常由此集结成批难民北行。",
+    source: "济南市志；胶济铁路史",
+  },
+  {
+    id: "tianjin",
+    name: "天津",
+    nameEn: "Tianjin",
+    kind: "origin",
+    country: "直隶 · 华北咽喉",
+    /** 天津站/海河三岔口商埠区（WGS-84） */
+    coord: [117.21, 39.136],
     established: 1860,
     description:
-      "1860 年 1 月 1 日开埠，潮海关设于妈屿岛，是潮汕近代「百载商埠」。1864–1911 年从这里出国谋生者达 294 万人次。",
-    source: "《汕头海关志》",
-  },
-  {
-    id: "dongli",
-    name: "东里港",
-    nameEn: "Dongli Port",
-    kind: "origin",
-    country: "潮汕 · 澄海",
-    /** 澄海东里镇镇区一带（WGS-84，与维基东里镇坐标一致量级） */
-    coord: [116.819, 23.557],
-    description: "樟林港的卫星港，红头船辅助启锚地之一。",
-    source: "澄海县志",
-  },
-  {
-    id: "dahao",
-    name: "达濠",
-    nameEn: "Dahao",
-    kind: "origin",
-    country: "潮汕 · 濠江",
-    /** 濠江区达濠街道一带（WGS-84） */
-    coord: [116.727, 23.286],
-    description: "汕头湾南岸传统渔商港，潮汕渔家下南洋重要出发地。",
-    source: "潮汕地方志",
-  },
-  {
-    id: "haimen",
-    name: "海门",
-    nameEn: "Haimen",
-    kind: "origin",
-    country: "潮汕 · 潮阳",
-    /** 潮阳区海门镇沿海一侧（WGS-84） */
-    coord: [116.612, 23.188],
-    description: "潮阳古海门所，沿海居民赴暹罗、安南的早期出发点之一。",
-    source: "潮阳县志",
+      "北方第一大埠，津浦、京奉铁路在此交汇。直隶、河南、山西移民多顺大运河或铁路至此换乘北上列车，经唐山、秦皇岛出山海关进入关东。",
+    source: "天津市志；《华北近代交通史》",
   },
 ];
 
+/**
+ * 关东主要迁入地与近代城市化节点。
+ * 陆路移民多先抵沈阳再向北分流；海路移民多在大连、营口、安东登陆后再进入腹地。
+ */
 export const DESTINATION_PORTS: Port[] = [
   {
-    id: "bangkok",
-    name: "曼谷",
-    nameEn: "Bangkok",
+    id: "shenyang",
+    name: "沈阳（奉天）",
+    nameEn: "Shenyang / Mukden",
     kind: "destination",
-    country: "泰国",
-    coord: [100.502, 13.7563],
-    established: 1782,
+    country: "辽宁 · 辽东腹地",
+    /** 沈阳故宫/奉天城中心（清代陪都，WGS-84） */
+    coord: [123.454, 41.796],
+    established: 1625,
     description:
-      "1767 年达信王建吞武里王朝（湄南河西岸），1782 年拉玛一世迁都曼谷。19 世纪中叶起为潮人最重要的目的地，今曼谷耀华力路（唐人街）即潮汕华人聚居核心。",
-    source: "泰国潮州会馆",
+      "清代陪都、晚清民国东北军政中心，陆路闯关「第一站」。移民出山海关后沿辽西走廊抵锦州，再进入沈阳平原；此后分流吉林、黑龙江或内蒙东部垦区。",
+    source: "沈阳市志；维基百科·沈阳",
   },
   {
-    id: "pattani",
-    name: "北大年",
-    nameEn: "Pattani",
+    id: "dalian",
+    name: "大连（旅大）",
+    nameEn: "Dalian / Lüda",
     kind: "destination",
-    country: "泰南马来亚",
-    coord: [101.281, 6.866],
-    description: "暹罗南部早期与潮汕通商的重要据点，红头船航线南端节点。",
-    source: "暹罗-潮汕航运史",
-  },
-  {
-    id: "singapore",
-    name: "新加坡",
-    nameEn: "Singapore",
-    kind: "destination",
-    country: "新加坡",
-    coord: [103.819, 1.352],
-    established: 1819,
+    country: "辽宁 · 辽东半岛南端",
+    /** 大连港大窑湾/港区代表点（WGS-84） */
+    coord: [121.643, 38.921],
+    established: 1899,
     description:
-      "1819 年莱佛士登陆后辟为自由港，潮人随即大量涌入；1830 年代潮帮已主导甘蜜与胡椒种植。今约 45 万潮人。",
-    source: "新加坡潮州八邑会馆；维基",
+      "辽东半岛南端深水港，胶东海路闯关最主要的登陆点之一。俄租「达里尼」及日占时期港口与中东铁路南线联运，移民登陆后或留连、或转铁路北上沈阳、长春。",
+    source: "大连市志·港口篇",
   },
   {
-    id: "penang",
-    name: "槟城",
-    nameEn: "Penang",
+    id: "yingkou",
+    name: "营口（牛庄）",
+    nameEn: "Yingkou / Niuzhuang",
     kind: "destination",
-    country: "马来亚",
-    coord: [100.330, 5.414],
-    established: 1786,
-    description: "1786 年莱特上校登陆，是马来亚最早的英属殖民港，潮人聚居于乔治市与威省。",
-    source: "马来亚华侨史",
+    country: "辽宁 · 辽河口",
+    /** 营口港/辽河口没沟营开埠地（WGS-84） */
+    coord: [122.106, 40.626],
+    established: 1861,
+    description:
+      "1858《天津条约》称「牛庄」开埠，1861 关区实际设于没沟营（今营口市区）。辽河航运终点，胶东帆船可经渤海湾北上在此登陆，再沿河或陆路进入辽东腹地。",
+    source: "维基百科·营口；《营口市志·口岸篇》",
   },
   {
-    id: "malacca",
-    name: "马六甲",
-    nameEn: "Malacca",
+    id: "dandong",
+    name: "安东（丹东）",
+    nameEn: "Dandong / Antung",
     kind: "destination",
-    country: "马来亚",
-    coord: [102.249, 2.196],
-    description: "海上丝绸之路古港，明清以来即有潮汕商人定居，多与峇峇娘惹文化融合。",
-    source: "马来亚华侨史",
+    country: "辽宁 · 鸭绿江口",
+    /** 丹东/安东城区与鸭绿江口（WGS-84） */
+    coord: [124.354, 40.129],
+    established: 1907,
+    description:
+      "辽东半岛东端鸭绿江口城市，近代称「安东」。胶东移民可沿海北上在此登陆，亦是连接辽东与鸭绿江流域的口岸；与大连、营口并列为海路闯关重要到达点。",
+    source: "丹东市志；国家民委《闯关东》专题",
   },
   {
-    id: "johorbahru",
-    name: "新山",
-    nameEn: "Johor Bahru",
+    id: "changchun",
+    name: "长春",
+    nameEn: "Changchun",
     kind: "destination",
-    country: "马来亚 · 柔佛",
-    coord: [103.760, 1.4927],
-    established: 1855,
-    description: "潮人「港主制度」中心，柔佛胡椒甘蜜港主多为潮汕籍，影响柔佛百年开发史。",
-    source: "柔佛港主史",
+    country: "吉林 · 松辽平原腹地",
+    /** 长春站/满铁附属地中心（WGS-84） */
+    coord: [125.325, 43.897],
+    established: 1800,
+    description:
+      "中东铁路南线与东线枢纽，民国时期吉林省会、伪满「新京」。移民多先抵沈阳，再沿铁路经四平北上定居松辽平原中部。",
+    source: "长春市志；中东铁路史",
   },
   {
-    id: "saigon",
-    name: "西贡-堤岸",
-    nameEn: "Saigon-Cholon",
+    id: "harbin",
+    name: "哈尔滨",
+    nameEn: "Harbin",
     kind: "destination",
-    country: "越南",
-    coord: [106.660, 10.762],
-    description: "越南南方最大华人聚居地堤岸，潮汕、广府、福建、客家、海南五帮共聚，潮人主理碾米业。",
-    source: "越南华侨史",
+    country: "黑龙江 · 松花江流域",
+    /** 哈尔滨站/中央大街历史城区（WGS-84） */
+    coord: [126.632, 45.756],
+    established: 1898,
+    description:
+      "中东铁路枢纽，「火车拉来的城市」。移民沿铁路从沈阳—长春一线继续北上，在松花江畔垦荒、务工、经商；20 世纪初即成为远东重要商埠。",
+    source: "哈尔滨市志；《中东铁路史稿》",
   },
   {
-    id: "phnompenh",
-    name: "金边",
-    nameEn: "Phnom Penh",
+    id: "qiqihar",
+    name: "齐齐哈尔",
+    nameEn: "Qiqihar",
     kind: "destination",
-    country: "柬埔寨",
-    coord: [104.916, 11.562],
-    description: "柬埔寨首都，潮汕华人长期主导大米、橡胶、典当业，今潮人约 50 余万。",
-    source: "柬埔寨华人志",
-  },
-  {
-    id: "batavia",
-    name: "巴达维亚（雅加达）",
-    nameEn: "Batavia / Jakarta",
-    kind: "destination",
-    country: "印尼 · 爪哇",
-    coord: [106.845, -6.208],
-    established: 1619,
-    description: "荷属东印度首都，张弼士最初在此白手起家。潮人多经营椰子、咖啡、橡胶种植与贸易。",
-    source: "印尼华侨史；张弼士传",
-  },
-  {
-    id: "medan",
-    name: "棉兰",
-    nameEn: "Medan",
-    kind: "destination",
-    country: "印尼 · 苏门答腊",
-    coord: [98.672, 3.595],
-    established: 1860,
-    description: "苏门答腊东岸烟草、橡胶种植中心，1860 年代后大批潮汕、客家契约华工被运至此地。",
-    source: "苏门答腊华侨史",
+    country: "黑龙江 · 嫩江流域",
+    /** 齐齐哈尔站/嫩江岸城区（WGS-84） */
+    coord: [123.918, 47.342],
+    established: 1691,
+    description:
+      "清代黑龙江将军驻地、近代黑龙江省会。闯关移民抵达哈尔滨后可继续沿铁路或陆路北上，在嫩江流域开垦草原湿地，为关东最北端的农垦终点之一。",
+    source: "齐齐哈尔市志",
   },
 ];
 

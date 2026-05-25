@@ -20,19 +20,19 @@ export function MapView({ onMapReady, styleId }: Props) {
     if (!containerRef.current || mapRef.current) return;
     const { map } = createMap({
       container: containerRef.current,
-      center: [110, 13.5],
-      zoom: 3.5,
+      center: [121.8, 43.8],
+      zoom: 4.4,
       bearing: 0,
       pitch: 0,
     });
     mapRef.current = map;
 
     const fitToScope = () => {
-      // covers Chaoshan (NE) to Sumatra (SW)
+      // 华北平原 — 辽东半岛 — 三江平原示意范围
       (map as any).fitBounds(
         [
-          [95, -7],
-          [120, 25],
+          [112.8, 36.8],
+          [134.8, 49.8],
         ],
         { padding: { top: 60, right: 360, bottom: 180, left: 360 }, duration: 0 }
       );
