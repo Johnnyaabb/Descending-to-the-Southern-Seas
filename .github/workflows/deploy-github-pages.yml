@@ -1,9 +1,9 @@
-# 单个 SPA：主页 + /nanyang /chuang-guandong /zou-xikou（GitHub Pages）
+# 主页 SPA（main）+ 走西口独立静态站（zou_xi_kou 分支 → /zou-xikou/）
 name: Deploy GitHub Pages
 
 on:
   push:
-    branches: [main, master]
+    branches: [main, master, zou_xi_kou]
   workflow_dispatch:
 
 permissions:
@@ -20,30 +20,56 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - uses: actions/setup-node@v4
         with:
           node-version: "20"
           cache: npm
 
-      - name: 设置 Vite base（项目仓库 / 用户主页仓库）
+      - name: 解析 Pages 前缀
         run: |
           REPO="${{ github.event.repository.name }}"
           OWNER="${{ github.repository_owner }}"
           if [ "$REPO" = "${OWNER}.github.io" ]; then
-            echo "VITE_BASE=/" >> "$GITHUB_ENV"
+            echo "SITE_ROOT=/" >> "$GITHUB_ENV"
           else
-            echo "VITE_BASE=/$REPO/" >> "$GITHUB_ENV"
+            echo "SITE_ROOT=/$REPO/" >> "$GITHUB_ENV"
           fi
 
-      - run: npm ci
-      - run: npm run build
+      - name: 构建主页 SPA（main）
+        run: |
+          git checkout main
+          npm ci
+          npm run build
         env:
+          VITE_BASE: ${{ env.SITE_ROOT }}
           VITE_MAPBOX_TOKEN: ${{ secrets.VITE_MAPBOX_TOKEN }}
+
+      - name: 收集 SPA 产物到 deploy/
+        run: |
+          mkdir -p deploy
+          cp -r dist/* deploy/
+          cp public/.nojekyll deploy/.nojekyll 2>/dev/null || echo > deploy/.nojekyll
+
+      - name: 构建「走西口」→ /zou-xikou/
+        run: |
+          git checkout zou_xi_kou
+          npm ci
+          npm run build
+        env:
+          VITE_BASE: ${{ env.SITE_ROOT }}zou-xikou/
+          VITE_MAPBOX_TOKEN: ${{ secrets.VITE_MAPBOX_TOKEN }}
+
+      - name: 收集 zou-xikou 产物
+        run: |
+          mkdir -p deploy/zou-xikou
+          cp -r dist/* deploy/zou-xikou/
 
       - uses: actions/upload-pages-artifact@v3
         with:
-          path: dist
+          path: deploy
 
   deploy:
     needs: build
