@@ -12,6 +12,7 @@ import { useTimelineStore } from "./store/useTimelineStore";
 import { HAS_MAPBOX_TOKEN, type MapboxLike } from "./lib/mapInstance";
 import { DEFAULT_STYLE_ID } from "./lib/mapStyles";
 import type { NotablePerson } from "./data/people";
+import { siblingTheme, portalUrl } from "./lib/siteLinks";
 
 export default function App() {
   const mapRef = useRef<MapboxLike | null>(null);
@@ -34,6 +35,8 @@ export default function App() {
     });
     useTimelineStore.getState().setYear(p.emigrateYear);
   }, []);
+
+  const otherTheme = siblingTheme();
 
   return (
     <div className="relative flex h-[100dvh] min-h-0 w-screen max-w-[100vw] flex-col overflow-x-hidden">
@@ -60,13 +63,28 @@ export default function App() {
           {!HAS_MAPBOX_TOKEN && (
             <MapStyleSwitcher currentId={styleId} onChange={setStyleId} />
           )}
+          {otherTheme && (
+            <a
+              href={otherTheme.href}
+              className="rounded border border-oldgold/30 px-2 py-1 hover:bg-black/40 hover:text-oldgold"
+              title={otherTheme.subtitle}
+            >
+              {otherTheme.label}
+            </a>
+          )}
           <a
-            href="https://github.com"
+            href={portalUrl()}
+            className="rounded border border-oldgold/30 px-2 py-1 hover:bg-black/40"
+          >
+            全部地图
+          </a>
+          <a
+            href="https://github.com/Johnnyaabb/Descending-to-the-Southern-Seas"
             className="rounded border border-oldgold/30 px-2 py-1 hover:bg-black/40"
             target="_blank"
             rel="noreferrer"
           >
-            关于本图
+            GitHub
           </a>
         </div>
       </header>
