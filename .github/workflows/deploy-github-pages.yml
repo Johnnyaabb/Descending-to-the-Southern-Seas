@@ -1,4 +1,4 @@
-# 构建并部署到 GitHub Pages（仓库 Settings → Pages → Source: GitHub Actions）
+# 单个 SPA：主页 + /nanyang /chuang-guandong /zou-xikou（GitHub Pages）
 name: Deploy GitHub Pages
 
 on:
@@ -26,15 +26,13 @@ jobs:
           node-version: "20"
           cache: npm
 
-      - name: 设置 Vite base（项目站 / 用户站）
+      - name: 设置 Vite base（项目仓库 / 用户主页仓库）
         run: |
           REPO="${{ github.event.repository.name }}"
           OWNER="${{ github.repository_owner }}"
           if [ "$REPO" = "${OWNER}.github.io" ]; then
-            echo "用户/组织主页仓库，资源前缀为 /"
             echo "VITE_BASE=/" >> "$GITHUB_ENV"
           else
-            echo "项目仓库，资源前缀为 /$REPO/"
             echo "VITE_BASE=/$REPO/" >> "$GITHUB_ENV"
           fi
 
