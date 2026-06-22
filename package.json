@@ -1,9 +1,9 @@
 {
-  "name": "chaoshan-nanyang-migration-map",
+  "name": "overview-map-of-chinese-migration-history",
   "private": true,
   "version": "0.1.0",
   "type": "module",
-  "description": "闽南与潮汕下南洋历史迁徙交互地图 · Minnan and Teochew migration to Southeast Asia 1684–1949",
+  "description": "Overview Map of Chinese Migration History · 华人迁徙史交互地图：下南洋 / 闯关东 / 走西口",
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build && cp dist/index.html dist/404.html",

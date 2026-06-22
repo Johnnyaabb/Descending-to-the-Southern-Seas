@@ -1,13 +1,15 @@
-# 华人迁徙史 · 交互地图
+# Overview Map of Chinese Migration History · 华人迁徙史交互地图
 
-站内含 **主页**（三大移民潮入口）与 **闽南·潮汕下南洋** 全屏交互地图。闯关东、走西口现为专题占位页，后续接地图与时间轴。
+首页为 **华人迁徙史 · 交互地图** 总览页，三大移民潮专题并列展示，点击进入各自的二级交互地图。三个专题均为时间轴驱动的完整地图。
+
+> An interactive overview of three great Chinese migration waves — 下南洋 (to Southeast Asia), 闯关东 (to the Northeast), and 走西口 (to the northern frontier).
 
 | 路径 | 内容 |
 | --- | --- |
-| `/` | 主页 · 下南洋 / 闯关东 / 走西口 |
-| `/nanyang` | 闽南·潮汕下南洋历史迁徙地图（原完整应用） |
-| `/chuang-guandong` | 闯关东（筹备中） |
-| `/zou-xikou` | 走西口（筹备中） |
+| `/` | 华人迁徙史总览（三专题入口） |
+| `/nanyang` | 闽南·潮汕下南洋历史迁徙地图（1684–1949） |
+| `/chuang-guandong` | 闯关东历史迁徙地图（1644–1949） |
+| `/zou-xikou` | 走西口历史迁徙地图（约 1650–1949） |
 
 ---
 
