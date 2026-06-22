@@ -8,3 +8,4 @@ dist
 .idea
 *.tsbuildinfo
 .worktrees
+.vercel
