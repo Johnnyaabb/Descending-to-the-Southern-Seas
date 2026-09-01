@@ -60,6 +60,44 @@ export interface CreateMapOptions {
   zoom: number;
   bearing?: number;
   pitch?: number;
+  /** Optional initial style used by themed maps. */
+  style?: maplibregl.StyleSpecification | string;
+  /** Collapse long attribution text behind the standard info control on small screens. */
+  compactAttribution?: boolean;
+}
+
+/**
+ * MapLibre renders compact attribution with a native `<details>` element.
+ * Browsers preserve its open state until it is explicitly closed, which can
+ * leave a long white attribution strip sitting over the mobile story card.
+ * Keep the standard information control available, but make its expanded
+ * state transient: map/style changes and any tap outside the control collapse
+ * it back to the small information button.
+ */
+function installCompactAttributionBehavior(map: MapboxLike) {
+  const container = map.getContainer() as HTMLElement;
+  const selector = ".maplibregl-ctrl-attrib, .mapboxgl-ctrl-attrib";
+
+  const collapse = () => {
+    const control = container.querySelector(selector);
+    if (!control) return;
+    if (control instanceof HTMLDetailsElement) control.open = false;
+    control.classList.remove("maplibregl-compact-show", "mapboxgl-compact-show");
+  };
+
+  const collapseOnOutsideTap = (event: PointerEvent) => {
+    const control = container.querySelector(selector);
+    if (control && event.target instanceof Node && !control.contains(event.target)) collapse();
+  };
+
+  requestAnimationFrame(collapse);
+  map.on("load", collapse);
+  map.on("style.load", collapse);
+  document.addEventListener("pointerdown", collapseOnOutsideTap, true);
+
+  map.once("remove", () => {
+    document.removeEventListener("pointerdown", collapseOnOutsideTap, true);
+  });
 }
 
 /**
@@ -74,19 +112,22 @@ export function createMap(opts: CreateMapOptions): { map: MapboxLike; lib: "mapb
     mapboxgl.accessToken = MAPBOX_TOKEN;
     const map = new mapboxgl.Map({
       container: opts.container,
-      style: MAPBOX_DARK_STYLE,
+      style: opts.style ?? MAPBOX_DARK_STYLE,
       center: opts.center,
       zoom: opts.zoom,
       bearing: opts.bearing ?? 0,
       pitch: opts.pitch ?? 0,
       projection: "mercator",
+      attributionControl: false,
     } as any);
+    map.addControl(new mapboxgl.AttributionControl({ compact: opts.compactAttribution ?? false }));
+    if (opts.compactAttribution) installCompactAttributionBehavior(map);
     return { map, lib: "mapbox" as const };
   }
 
   // Try OpenFreeMap first; if it fails to load the style we'll have set the
   // raster fallback as a one-shot retry.
-  let style: maplibregl.StyleSpecification | string = POSITRON_STYLE;
+  let style: maplibregl.StyleSpecification | string = opts.style ?? POSITRON_STYLE;
   // Provide a global error handler that switches to raster if vector style 404s
   // (network blocked, offline, etc.).
   const map = new maplibregl.Map({
@@ -96,7 +137,10 @@ export function createMap(opts: CreateMapOptions): { map: MapboxLike; lib: "mapb
     zoom: opts.zoom,
     bearing: opts.bearing ?? 0,
     pitch: opts.pitch ?? 0,
+    attributionControl: false,
   } as any);
+  map.addControl(new maplibregl.AttributionControl({ compact: opts.compactAttribution ?? false }));
+  if (opts.compactAttribution) installCompactAttributionBehavior(map);
   map.on("error", (e: any) => {
     const msg = e?.error?.message ?? "";
     if (typeof style === "string" && msg.includes("style")) {

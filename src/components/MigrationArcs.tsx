@@ -121,6 +121,8 @@ function bearingDeg(from: [number, number], to: [number, number]): number {
 
 interface Props {
   map: MapboxLike;
+  mobile?: boolean;
+  visible?: boolean;
 }
 
 interface ArcCache {
@@ -130,7 +132,7 @@ interface ArcCache {
   lengthKm: number;
 }
 
-export function MigrationArcs({ map }: Props) {
+export function MigrationArcs({ map, mobile = false, visible = true }: Props) {
   const year = useTimelineStore((s) => s.year);
   const speed = useTimelineStore((s) => s.speed);
   const arcCacheRef = useRef<Map<string, ArcCache>>(new Map());
@@ -298,6 +300,10 @@ export function MigrationArcs({ map }: Props) {
 
       // Critical after setStyle(): sources are recreated empty; re-apply current timeline year.
       pushOverlayGeoJSON(useTimelineStore.getState().year);
+      const visibility = visible ? "visible" : "none";
+      for (const layerId of [ARC_GLOW_LAYER, ARC_LINE_LAYER, ARC_LABEL_LAYER, PARTICLE_LAYER]) {
+        if (map.getLayer?.(layerId)) map.setLayoutProperty(layerId, "visibility", visibility);
+      }
       attachHover();
     };
 
@@ -319,7 +325,7 @@ export function MigrationArcs({ map }: Props) {
         hoverRef.current = null;
       }
     };
-  }, [map, arcMap]);
+  }, [map, arcMap, visible]);
 
   // Update active arcs + distance labels when year changes.
   useEffect(() => {
@@ -359,7 +365,7 @@ export function MigrationArcs({ map }: Props) {
       for (const f of active) {
         const cache = arcCacheRef.current.get(f.id);
         if (!cache) continue;
-        const target = f.volume > 500_000 ? 3 : f.volume > 100_000 ? 2 : 1;
+        const target = mobile ? 1 : f.volume > 500_000 ? 3 : f.volume > 100_000 ? 2 : 1;
         const cur = particles.filter((p) => p.flowId === f.id).length;
         const need = target - cur;
         for (let i = 0; i < need; i++) {
@@ -368,7 +374,7 @@ export function MigrationArcs({ map }: Props) {
             arc: cache.arc,
             t: -Math.random() * 0.6,
             tSpeed: 0.0035 + Math.random() * 0.0025,
-            size: 0.5 + Math.log(f.volume + 1) / Math.log(2_000_000),
+            size: (mobile ? 0.72 : 1) * (0.5 + Math.log(f.volume + 1) / Math.log(2_000_000)),
             color: colorForPhase(f.phaseId),
           });
         }
@@ -399,9 +405,14 @@ export function MigrationArcs({ map }: Props) {
         });
       }
 
-      const src = map.getSource(PARTICLE_SOURCE) as any;
-      if (src) src.setData({ type: "FeatureCollection", features });
-      raf = requestAnimationFrame(tick);
+      try {
+        const src = map.getSource(PARTICLE_SOURCE) as any;
+        if (src) src.setData({ type: "FeatureCollection", features });
+      } catch {
+        // setStyle(), hot reload, and route changes briefly detach MapLibre's
+        // internal style object. The next frame will resume once it is ready.
+      }
+      if (running) raf = requestAnimationFrame(tick);
     };
 
     raf = requestAnimationFrame(tick);
@@ -409,7 +420,20 @@ export function MigrationArcs({ map }: Props) {
       running = false;
       cancelAnimationFrame(raf);
     };
-  }, [map, speed, arcMap]);
+  }, [map, speed, arcMap, mobile]);
+
+  useEffect(() => {
+    const visibility = visible ? "visible" : "none";
+    for (const layerId of [ARC_GLOW_LAYER, ARC_LINE_LAYER, ARC_LABEL_LAYER, PARTICLE_LAYER]) {
+      if (!map.getLayer?.(layerId)) continue;
+      try {
+        map.setLayoutProperty(layerId, "visibility", visibility);
+      } catch {
+        // A style change temporarily removes custom layers; the restore hook
+        // reapplies their default visibility and this effect runs on the next toggle.
+      }
+    }
+  }, [map, visible]);
 
   return null;
 }

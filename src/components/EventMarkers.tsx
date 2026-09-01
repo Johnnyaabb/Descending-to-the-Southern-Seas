@@ -12,6 +12,7 @@ function PopupCtor(): any {
 
 interface Props {
   map: MapboxLike;
+  mobile?: boolean;
 }
 
 const categoryColor: Record<string, string> = {
@@ -21,7 +22,7 @@ const categoryColor: Record<string, string> = {
   settlement: "#0e7490",
 };
 
-export function EventMarkers({ map }: Props) {
+export function EventMarkers({ map, mobile = false }: Props) {
   const year = useTimelineStore((s) => s.year);
   const selectedId = useTimelineStore((s) => s.selectedEventId);
   const selectEvent = useTimelineStore((s) => s.selectEvent);
@@ -43,8 +44,11 @@ export function EventMarkers({ map }: Props) {
 
     for (const ev of EVENTS) {
       const el = document.createElement("div");
-      el.className = "cs-event-marker";
+      el.className = `cs-event-marker${mobile ? " cs-event-marker--mobile" : ""}`;
       el.style.cursor = "pointer";
+      el.setAttribute("role", "button");
+      el.setAttribute("tabindex", "0");
+      el.setAttribute("aria-label", `${ev.year} 年，${ev.title}，${ev.location}`);
       el.innerHTML = `
         <div style="
           width:18px; height:18px;
@@ -77,10 +81,16 @@ export function EventMarkers({ map }: Props) {
         .setLngLat(ev.coord)
         .setPopup(popup as any)
         .addTo(map as any);
-      el.addEventListener("click", () => {
+      const chooseEvent = () => {
         selectEvent(ev.id);
         useTimelineStore.getState().setYear(ev.year);
         (map as any).flyTo({ center: ev.coord, zoom: Math.max(map.getZoom(), 4.4), speed: 0.8 });
+      };
+      el.addEventListener("click", chooseEvent);
+      el.addEventListener("keydown", (event) => {
+        if (event.key !== "Enter" && event.key !== " ") return;
+        event.preventDefault();
+        chooseEvent();
       });
       markerMap.current.set(ev.id, { marker, el, popup });
     }
@@ -94,12 +104,16 @@ export function EventMarkers({ map }: Props) {
   // Exactly one map popup at a time: close others, then show the selection (if any)
   useEffect(() => {
     removeAllPopupsFromMap();
+    for (const [id, entry] of markerMap.current.entries()) {
+      entry.el.classList.toggle("is-selected", id === selectedId);
+    }
+    if (mobile) return;
     if (!selectedId) return;
     const entry = markerMap.current.get(selectedId);
     const ev = EVENTS.find((e) => e.id === selectedId);
     if (!entry || !ev) return;
     entry.popup.setLngLat(ev.coord).addTo(map as any);
-  }, [selectedId, map]);
+  }, [mobile, selectedId, map]);
 
   // Visually fade events outside the visible year range.
   useEffect(() => {

@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { lazy, Suspense, useCallback, useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { MapView } from "../guandong/components/MapView";
@@ -15,15 +15,36 @@ import { HAS_MAPBOX_TOKEN, type MapboxLike } from "../lib/mapInstance";
 import { DEFAULT_STYLE_ID } from "../lib/mapStyles";
 import type { NotablePerson } from "../guandong/data/people";
 
-export function ChuangGuandongMigrationPage() {
-  const mapRef = useRef<MapboxLike | null>(null);
-  const [mapReady, setMapReady] = useState(false);
-  const [styleId, setStyleId] = useState<string>(DEFAULT_STYLE_ID);
+const GuandongMobilePage = lazy(() =>
+  import("../guandong/GuandongMobilePage").then((module) => ({ default: module.GuandongMobilePage })),
+);
+
+function useMobileLayout() {
+  const [mobile, setMobile] = useState(() =>
+    typeof window !== "undefined" && window.matchMedia("(max-width: 767px)").matches,
+  );
 
   useEffect(() => {
+    const query = window.matchMedia("(max-width: 767px)");
+    const update = () => setMobile(query.matches);
+    query.addEventListener("change", update);
+    return () => query.removeEventListener("change", update);
+  }, []);
+
+  return mobile;
+}
+
+export function ChuangGuandongMigrationPage() {
+  const mobileLayout = useMobileLayout();
+  const mapRef = useRef<MapboxLike | null>(null);
+  const [mapReady, setMapReady] = useState(false);
+  const [styleId, setStyleId] = useState<string>(() => (mobileLayout ? "satellite" : DEFAULT_STYLE_ID));
+
+  useEffect(() => {
+    if (mobileLayout) return;
     useTimelineStore.getState().reset();
     useTimelineStore.getState().setYear(TIMELINE_MIN);
-  }, []);
+  }, [mobileLayout]);
 
   const handleMapReady = useCallback((map: MapboxLike) => {
     mapRef.current = map;
@@ -41,6 +62,14 @@ export function ChuangGuandongMigrationPage() {
     });
     useTimelineStore.getState().setYear(p.emigrateYear);
   }, []);
+
+  if (mobileLayout) {
+    return (
+      <Suspense fallback={<div className="grid h-[100dvh] place-items-center bg-[#080d13] text-sm text-[#f5e6c8]">正在展开关东迁徙图…</div>}>
+        <GuandongMobilePage mapStyleId={styleId} onMapStyleChange={setStyleId} />
+      </Suspense>
+    );
+  }
 
   return (
     <div className="relative flex h-[100dvh] min-h-0 w-screen max-w-[100vw] flex-col overflow-x-hidden">

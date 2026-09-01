@@ -9,11 +9,15 @@ import { getStyleById } from "../../lib/mapStyles";
 interface Props {
   onMapReady?: (map: MapboxLike) => void;
   styleId: string;
+  mobile?: boolean;
+  routesVisible?: boolean;
 }
 
-export function MapView({ onMapReady, styleId }: Props) {
+export function MapView({ onMapReady, styleId, mobile = false, routesVisible = true }: Props) {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const mapRef = useRef<MapboxLike | null>(null);
+  const initialStyleRef = useRef(styleId);
+  const appliedStyleRef = useRef(styleId);
   const [, force] = useState(0); // re-render after map is ready so children can use it
 
   useEffect(() => {
@@ -24,17 +28,29 @@ export function MapView({ onMapReady, styleId }: Props) {
       zoom: 4.6,
       bearing: 0,
       pitch: 0,
+      style: HAS_MAPBOX_TOKEN ? undefined : getStyleById(initialStyleRef.current).style,
+      compactAttribution: mobile,
     });
     mapRef.current = map;
 
     const fitToScope = () => {
       // 晋陕冀—漠南—河套走廊
       (map as any).fitBounds(
-        [
-          [96, 36],
-          [119.5, 44.5],
-        ],
-        { padding: { top: 60, right: 360, bottom: 180, left: 360 }, duration: 0 }
+        mobile
+          ? [
+              [104.5, 36.2],
+              [116.5, 43.3],
+            ]
+          : [
+              [96, 36],
+              [119.5, 44.5],
+            ],
+        {
+          padding: mobile
+            ? { top: 46, right: 22, bottom: 205, left: 22 }
+            : { top: 60, right: 360, bottom: 180, left: 360 },
+          duration: 0,
+        }
       );
     };
 
@@ -49,7 +65,7 @@ export function MapView({ onMapReady, styleId }: Props) {
       map.remove();
       mapRef.current = null;
     };
-  }, [onMapReady]);
+  }, [mobile, onMapReady]);
 
   // Swap basemap style when the user picks a new one. `setStyle` clears any
   // sources/layers added by children, and that effect can run *after* child
@@ -58,6 +74,8 @@ export function MapView({ onMapReady, styleId }: Props) {
     const map = mapRef.current;
     if (!map) return;
     if (HAS_MAPBOX_TOKEN) return; // when using a Mapbox token, that style wins
+    if (appliedStyleRef.current === styleId) return;
+    appliedStyleRef.current = styleId;
     const spec = getStyleById(styleId).style;
     try {
       (map as any).setStyle(spec as any);
@@ -88,7 +106,7 @@ export function MapView({ onMapReady, styleId }: Props) {
   const style = getStyleById(styleId);
 
   return (
-    <div className="relative h-full w-full">
+    <div className={`relative h-full w-full ${mobile ? "migration-map--mobile" : ""}`}>
       <div ref={containerRef} className="absolute inset-0" />
       {/* Optional translucent tint to ensure arcs/ships read well on bright basemaps */}
       {style.tone === "light" || style.tone === "sepia" ? (
@@ -106,9 +124,9 @@ export function MapView({ onMapReady, styleId }: Props) {
       {/* Layers: rendered only after map.load */}
       {mapRef.current && (
         <>
-          <MigrationArcs map={mapRef.current} />
-          <PortMarkers map={mapRef.current} />
-          <EventMarkers map={mapRef.current} />
+          <MigrationArcs map={mapRef.current} mobile={mobile} visible={routesVisible} />
+          <PortMarkers map={mapRef.current} mobile={mobile} />
+          <EventMarkers map={mapRef.current} mobile={mobile} />
         </>
       )}
     </div>

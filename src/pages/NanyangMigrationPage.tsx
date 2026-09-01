@@ -1,4 +1,4 @@
-import { useCallback, useRef, useState } from "react";
+import { lazy, Suspense, useCallback, useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { MapView } from "../components/MapView";
@@ -14,10 +14,30 @@ import { HAS_MAPBOX_TOKEN, type MapboxLike } from "../lib/mapInstance";
 import { DEFAULT_STYLE_ID } from "../lib/mapStyles";
 import type { NotablePerson } from "../data/people";
 
+const NanyangMobilePage = lazy(() =>
+  import("../nanyang/NanyangMobilePage").then((module) => ({ default: module.NanyangMobilePage })),
+);
+
+function useMobileLayout() {
+  const [mobile, setMobile] = useState(() =>
+    typeof window !== "undefined" && window.matchMedia("(max-width: 767px)").matches,
+  );
+
+  useEffect(() => {
+    const query = window.matchMedia("(max-width: 767px)");
+    const update = () => setMobile(query.matches);
+    query.addEventListener("change", update);
+    return () => query.removeEventListener("change", update);
+  }, []);
+
+  return mobile;
+}
+
 export function NanyangMigrationPage() {
+  const mobileLayout = useMobileLayout();
   const mapRef = useRef<MapboxLike | null>(null);
   const [mapReady, setMapReady] = useState(false);
-  const [styleId, setStyleId] = useState<string>(DEFAULT_STYLE_ID);
+  const [styleId, setStyleId] = useState<string>(() => (mobileLayout ? "satellite" : DEFAULT_STYLE_ID));
 
   const handleMapReady = useCallback((map: MapboxLike) => {
     mapRef.current = map;
@@ -35,6 +55,14 @@ export function NanyangMigrationPage() {
     });
     useTimelineStore.getState().setYear(p.emigrateYear);
   }, []);
+
+  if (mobileLayout) {
+    return (
+      <Suspense fallback={<div className="grid h-[100dvh] place-items-center bg-[#080d13] text-sm text-[#f5e6c8]">正在展开南洋航海图…</div>}>
+        <NanyangMobilePage mapStyleId={styleId} onMapStyleChange={setStyleId} />
+      </Suspense>
+    );
+  }
 
   return (
     <div className="relative flex h-screen w-screen flex-col overflow-hidden">

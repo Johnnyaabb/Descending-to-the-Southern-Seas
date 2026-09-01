@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { lazy, Suspense, useCallback, useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { MapView } from "../xikou/components/MapView";
@@ -14,14 +14,35 @@ import { HAS_MAPBOX_TOKEN, type MapboxLike } from "../lib/mapInstance";
 import { DEFAULT_STYLE_ID } from "../lib/mapStyles";
 import type { NotablePerson } from "../xikou/data/people";
 
-export function ZouXikouMigrationPage() {
-  const mapRef = useRef<MapboxLike | null>(null);
-  const [mapReady, setMapReady] = useState(false);
-  const [styleId, setStyleId] = useState<string>(DEFAULT_STYLE_ID);
+const XikouMobilePage = lazy(() =>
+  import("../xikou/XikouMobilePage").then((module) => ({ default: module.XikouMobilePage })),
+);
+
+function useMobileLayout() {
+  const [mobile, setMobile] = useState(() =>
+    typeof window !== "undefined" && window.matchMedia("(max-width: 767px)").matches,
+  );
 
   useEffect(() => {
-    useTimelineStore.getState().reset();
+    const query = window.matchMedia("(max-width: 767px)");
+    const update = () => setMobile(query.matches);
+    query.addEventListener("change", update);
+    return () => query.removeEventListener("change", update);
   }, []);
+
+  return mobile;
+}
+
+export function ZouXikouMigrationPage() {
+  const mobileLayout = useMobileLayout();
+  const mapRef = useRef<MapboxLike | null>(null);
+  const [mapReady, setMapReady] = useState(false);
+  const [styleId, setStyleId] = useState<string>(() => (mobileLayout ? "satellite" : DEFAULT_STYLE_ID));
+
+  useEffect(() => {
+    if (mobileLayout) return;
+    useTimelineStore.getState().reset();
+  }, [mobileLayout]);
 
   const handleMapReady = useCallback((map: MapboxLike) => {
     mapRef.current = map;
@@ -39,6 +60,14 @@ export function ZouXikouMigrationPage() {
     });
     useTimelineStore.getState().setYear(p.emigrateYear);
   }, []);
+
+  if (mobileLayout) {
+    return (
+      <Suspense fallback={<div className="grid h-[100dvh] place-items-center bg-[#080d13] text-sm text-[#f5e6c8]">正在展开西口商路图…</div>}>
+        <XikouMobilePage mapStyleId={styleId} onMapStyleChange={setStyleId} />
+      </Suspense>
+    );
+  }
 
   return (
     <div className="relative flex h-[100dvh] min-h-0 w-screen max-w-[100vw] flex-col overflow-x-hidden">

@@ -7,9 +7,11 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build && cp dist/index.html dist/404.html",
+    "audit:homer": "node --experimental-strip-types tools/audit-homer-data.mjs",
     "preview": "vite preview"
   },
   "dependencies": {
+    "@phosphor-icons/react": "^2.1.10",
     "d3": "^7.9.0",
     "framer-motion": "^11.11.17",
     "mapbox-gl": "^3.8.0",

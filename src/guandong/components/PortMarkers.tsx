@@ -6,6 +6,7 @@ import { maplibregl, mapboxgl, HAS_MAPBOX_TOKEN, type MapboxLike } from "../../l
 
 interface Props {
   map: MapboxLike;
+  mobile?: boolean;
 }
 
 interface MarkerEntry {
@@ -23,7 +24,11 @@ function PopupCtor(): any {
 
 const ALWAYS_LABELED_ORIGINS = new Set(["shanhaiguan", "yantai"]);
 
-function createOriginEl(port: Port): HTMLElement {
+function markerLabel(port: Port, mobile: boolean) {
+  return mobile ? port.name.split(/[（·]/)[0].trim() : port.name;
+}
+
+function createOriginEl(port: Port, mobile: boolean): HTMLElement {
   const el = document.createElement("div");
   el.className = "cs-origin-marker";
   const showLabel = ALWAYS_LABELED_ORIGINS.has(port.id);
@@ -37,13 +42,13 @@ function createOriginEl(port: Port): HTMLElement {
         <path d="M34 12l16 8-16 6V12z" fill="#f5e6c8"/>
         <path d="M30 14l-12 6 12 4V14z" fill="#f5e6c8"/>
       </svg>
-      ${showLabel ? `<div style="margin-top:2px; padding:1px 6px; border-radius:3px; background:rgba(178,34,34,0.92); color:#f5e6c8; font-size:10px; font-family:'Noto Serif SC',serif; white-space:nowrap; box-shadow:0 1px 3px rgba(0,0,0,0.6);">${port.name}</div>` : ""}
+      ${showLabel ? `<div style="margin-top:2px; padding:1px 6px; border-radius:3px; background:rgba(178,34,34,0.92); color:#f5e6c8; font-size:10px; font-family:'Noto Serif SC',serif; white-space:nowrap; box-shadow:0 1px 3px rgba(0,0,0,0.6);">${markerLabel(port, mobile)}</div>` : ""}
     </div>
   `;
   return el;
 }
 
-function createDestinationEl(port: Port): HTMLElement {
+function createDestinationEl(port: Port, mobile: boolean): HTMLElement {
   const el = document.createElement("div");
   el.className = "cs-dest-marker";
   el.innerHTML = `
@@ -60,13 +65,13 @@ function createDestinationEl(port: Port): HTMLElement {
         background:rgba(20,12,8,0.78);
         color:#f5e6c8; font-size:10px; font-family:'Noto Serif SC',serif;
         white-space:nowrap; box-shadow:0 1px 3px rgba(0,0,0,0.6);
-      ">${port.name}</div>
+      ">${markerLabel(port, mobile)}</div>
     </div>
   `;
   return el;
 }
 
-export function PortMarkers({ map }: Props) {
+export function PortMarkers({ map, mobile = false }: Props) {
   const markers = useRef<MarkerEntry[]>([]);
   const year = useTimelineStore((s) => s.year);
 
@@ -77,7 +82,7 @@ export function PortMarkers({ map }: Props) {
 
     // Origin
     for (const port of ORIGIN_PORTS) {
-      const el = createOriginEl(port);
+      const el = createOriginEl(port, mobile);
       const marker = new Marker({ element: el, anchor: "bottom" })
         .setLngLat(port.coord)
         .setPopup(
@@ -98,7 +103,7 @@ export function PortMarkers({ map }: Props) {
 
     // Destination
     for (const port of DESTINATION_PORTS) {
-      const el = createDestinationEl(port);
+      const el = createDestinationEl(port, mobile);
       const marker = new Marker({ element: el, anchor: "center" })
         .setLngLat(port.coord)
         .addTo(map as any);
@@ -136,7 +141,7 @@ export function PortMarkers({ map }: Props) {
       for (const m of markers.current) m.marker.remove();
       markers.current = [];
     };
-  }, [map]);
+  }, [map, mobile]);
 
   // Resize destination rings based on cumulative count per year.
   useEffect(() => {
