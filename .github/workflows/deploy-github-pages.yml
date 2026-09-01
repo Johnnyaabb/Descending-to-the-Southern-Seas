@@ -51,6 +51,10 @@ jobs:
           mkdir -p deploy
           cp -r dist/* deploy/
           cp dist/index.html deploy/404.html
+          for ROUTE in nanyang chuang-guandong zou-xikou homeric-epics; do
+            mkdir -p "deploy/$ROUTE"
+            cp dist/index.html "deploy/$ROUTE/index.html"
+          done
           cp public/.nojekyll deploy/.nojekyll 2>/dev/null || echo > deploy/.nojekyll
 
       - uses: actions/upload-pages-artifact@v3
