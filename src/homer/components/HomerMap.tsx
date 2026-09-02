@@ -329,6 +329,18 @@ export function HomerMap({ styleId, labelsVisible, routesVisible = true, mobile 
 
       const dot = document.createElement("span");
       dot.className = "homer-map-marker__dot";
+      const icon = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+      icon.classList.add("homer-map-marker__icon");
+      icon.setAttribute("viewBox", "0 0 24 24");
+      icon.setAttribute("aria-hidden", "true");
+      icon.setAttribute("focusable", "false");
+      const helmet = document.createElementNS("http://www.w3.org/2000/svg", "path");
+      helmet.setAttribute(
+        "d",
+        "M19.5 8.5C18.8 5.4 16.3 3.5 13 3.5c-4.2 0-7 3.1-7 7.4 0 .8.1 1.5.4 2.2L4.8 17h3.4l1.8-2.5h3V20h3V9.6l3.5-1.1ZM9.5 9.8H16",
+      );
+      icon.append(helmet);
+      dot.append(icon);
       const label = document.createElement("span");
       label.className = "homer-map-marker__label";
       label.textContent = place.name;

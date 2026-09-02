@@ -257,23 +257,32 @@ input[type="range"].cs-slider::-moz-range-thumb {
   box-shadow: 0 0 0 2px rgba(216,180,106,.16), 0 8px 18px rgba(0,0,0,.34);
 }
 .homer-map-marker__dot {
-  display: block;
-  width: 10px;
-  height: 10px;
+  display: grid;
+  width: 20px;
+  height: 20px;
   flex: 0 0 auto;
+  place-items: center;
   border-radius: 999px;
-  background: #d7bd79;
-  border: 2px solid rgba(255,255,255,.18);
-  box-shadow: 0 0 8px currentColor;
-  transition: box-shadow .2s ease, width .2s ease, height .2s ease;
+  color: #d7bd79;
+  background: rgba(5, 16, 24, .94);
+  border: 1px solid currentColor;
+  box-shadow: 0 0 0 2px rgba(5, 16, 24, .62), 0 0 9px currentColor;
+  transition: box-shadow .2s ease, width .2s ease, height .2s ease, color .2s ease;
 }
-.homer-map-marker--textual .homer-map-marker__dot { background: #7dc9c3; }
-.homer-map-marker--traditional .homer-map-marker__dot { background: #d98b5f; }
-.homer-map-marker--mythic .homer-map-marker__dot {
-  border-radius: 2px;
-  transform: rotate(45deg);
-  background: #a98dcc;
+.homer-map-marker__icon {
+  width: 13px;
+  height: 13px;
+  overflow: visible;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  filter: drop-shadow(0 0 3px currentColor);
 }
+.homer-map-marker--textual .homer-map-marker__dot { color: #7dc9c3; }
+.homer-map-marker--traditional .homer-map-marker__dot { color: #d98b5f; }
+.homer-map-marker--mythic .homer-map-marker__dot { color: #a98dcc; }
 .homer-map-marker__label {
   font-family: "Noto Serif SC", "Songti SC", serif;
   font-size: 10px;
@@ -950,15 +959,17 @@ input[type="range"].homer-slider::-moz-range-thumb {
     box-shadow: none;
     opacity: 0.82;
   }
-  .homer-map--mobile .homer-map-marker__dot { width: 12px; height: 12px; }
+  .homer-map--mobile .homer-map-marker__dot { width: 24px; height: 24px; }
+  .homer-map--mobile .homer-map-marker__icon { width: 15px; height: 15px; }
   .homer-map--mobile .homer-map-marker.is-selected .homer-map-marker__dot {
-    width: 16px;
-    height: 16px;
+    width: 30px;
+    height: 30px;
     box-shadow: 0 0 0 6px rgba(216, 180, 106, 0.15), 0 0 16px rgba(216, 180, 106, 0.72);
   }
+  .homer-map--mobile .homer-map-marker.is-selected .homer-map-marker__icon { width: 18px; height: 18px; }
   .homer-map--mobile .homer-map-marker.is-selected .homer-map-marker__label {
     position: absolute;
-    left: 34px;
+    left: 39px;
     display: block;
     max-width: 148px;
     overflow: hidden;
