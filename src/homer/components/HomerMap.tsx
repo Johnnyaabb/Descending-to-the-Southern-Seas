@@ -3,6 +3,7 @@ import type { Feature, FeatureCollection, LineString } from "geojson";
 import { createMap, mapboxgl, maplibregl, type MapboxLike } from "../../lib/mapInstance";
 import { getStyleById } from "../../lib/mapStyles";
 import { smoothRouteLine } from "../../lib/arcGeometry";
+import { MobileMapCompass } from "../../components/mobile/MobileMapCompass";
 import {
   EVIDENCE_LABELS,
   HOMER_ROUTES,
@@ -398,6 +399,8 @@ export function HomerMap({ styleId, labelsVisible, routesVisible = true, mobile 
       <div className="pointer-events-none absolute inset-0 transition-colors duration-500" style={{ backgroundColor: toneTint }} />
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_50%_45%,transparent_25%,rgba(2,9,15,0.42)_100%)]" />
       <div className="pointer-events-none absolute inset-x-0 top-0 h-24 bg-gradient-to-b from-[#071018]/80 to-transparent" />
+
+      {mobile && ready && mapRef.current ? <MobileMapCompass map={mapRef.current} /> : null}
 
       {!ready && (
         <div className="absolute inset-0 grid place-items-center bg-[#061019]/80">

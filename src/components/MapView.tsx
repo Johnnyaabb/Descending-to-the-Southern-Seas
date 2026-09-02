@@ -5,6 +5,7 @@ import { MigrationArcs } from "./MigrationArcs";
 import { PortMarkers } from "./PortMarkers";
 import { EventMarkers } from "./EventMarkers";
 import { getStyleById } from "../lib/mapStyles";
+import { MobileMapCompass } from "./mobile/MobileMapCompass";
 
 interface Props {
   onMapReady?: (map: MapboxLike) => void;
@@ -122,6 +123,7 @@ export function MapView({ onMapReady, styleId, mobile = false, routesVisible = t
           <MigrationArcs map={mapRef.current} mobile={mobile} visible={routesVisible} />
           <PortMarkers map={mapRef.current} />
           <EventMarkers map={mapRef.current} mobile={mobile} />
+          {mobile ? <MobileMapCompass map={mapRef.current} /> : null}
         </>
       )}
     </div>

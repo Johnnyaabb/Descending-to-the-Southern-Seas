@@ -269,6 +269,8 @@ function EventCarousel({ config, onRead }: { config: MigrationMobileConfig; onRe
   const events = config.events;
   const currentIndex = Math.max(0, events.findIndex((event) => event.id === selectedEventId));
   const event = events.find((item) => item.id === selectedEventId) ?? events[currentIndex];
+  const swipeStartRef = useRef<number | null>(null);
+  const [dragX, setDragX] = useState(0);
   if (!event) return null;
 
   const choose = (next: MobileHistoricalEvent) => {
@@ -278,6 +280,15 @@ function EventCarousel({ config, onRead }: { config: MigrationMobileConfig; onRe
   const move = (delta: number) => {
     const nextIndex = Math.min(events.length - 1, Math.max(0, currentIndex + delta));
     choose(events[nextIndex]);
+  };
+  const finishSwipe = (clientX: number) => {
+    const startX = swipeStartRef.current;
+    swipeStartRef.current = null;
+    setDragX(0);
+    if (startX === null) return;
+    const delta = clientX - startX;
+    if (delta < -44) move(1);
+    else if (delta > 44) move(-1);
   };
   const category = EVENT_CATEGORY[event.category];
   const renderPeek = (neighbor: MobileHistoricalEvent | undefined, side: "left" | "right") => {
@@ -307,7 +318,22 @@ function EventCarousel({ config, onRead }: { config: MigrationMobileConfig; onRe
       <motion.article
         key={event.id}
         initial={{ opacity: 0.55, y: 8 }}
-        animate={{ opacity: 1, y: 0 }}
+        animate={{ opacity: 1, y: 0, x: dragX }}
+        transition={dragX === 0 ? { type: "spring", stiffness: 420, damping: 34 } : { duration: 0 }}
+        onPointerDown={(event) => {
+          if ((event.target as HTMLElement).closest?.("button")) return;
+          swipeStartRef.current = event.clientX;
+          event.currentTarget.setPointerCapture(event.pointerId);
+        }}
+        onPointerMove={(event) => {
+          if (swipeStartRef.current === null) return;
+          setDragX(Math.max(-90, Math.min(90, event.clientX - swipeStartRef.current)));
+        }}
+        onPointerUp={(event) => {
+          finishSwipe(event.clientX);
+          if (event.currentTarget.hasPointerCapture(event.pointerId)) event.currentTarget.releasePointerCapture(event.pointerId);
+        }}
+        onPointerCancel={() => { swipeStartRef.current = null; setDragX(0); }}
         className="migration-mobile-event-card"
       >
         <div className="migration-mobile-event-card__meta">
@@ -540,7 +566,7 @@ export function MigrationMobileExperience({ config, mapStyleId, onMapStyleChange
             <div className="absolute inset-0">
               <MapComponent onMapReady={handleMapReady} styleId={mapStyleId} mobile routesVisible={routesVisible} />
             </div>
-            <div className="absolute inset-x-0 bottom-[185px] z-20 flex justify-center">
+            <div className="absolute inset-x-0 bottom-[157px] z-20 flex justify-center">
               <RouteToggle visible={routesVisible} routeNoun={config.routeNoun} onChange={setRoutesVisible} />
             </div>
             <EventCarousel config={config} onRead={() => setActiveSection("timeline")} />

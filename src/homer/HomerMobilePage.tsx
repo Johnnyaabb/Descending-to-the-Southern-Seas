@@ -234,6 +234,15 @@ function JourneyCard({ onRead }: { onRead: () => void }) {
         key={episode.id}
         initial={{ opacity: 0.55, y: 8 }}
         animate={{ opacity: 1, y: 0 }}
+        drag="x"
+        dragConstraints={{ left: 0, right: 0 }}
+        dragElastic={0.16}
+        dragMomentum={false}
+        whileDrag={{ scale: 0.985, cursor: "grabbing" }}
+        onDragEnd={(_, info) => {
+          if (info.offset.x < -44 || info.velocity.x < -380) move(1);
+          if (info.offset.x > 44 || info.velocity.x > 380) move(-1);
+        }}
         className="homer-mobile-journey-card"
       >
         <div className="homer-mobile-journey-card__meta">
@@ -388,7 +397,7 @@ export function HomerMobilePage({
             <div className="absolute inset-0">
               <HomerMap styleId={mapStyleId} labelsVisible={labelsVisible} routesVisible={routesVisible} mobile />
             </div>
-            <div className="absolute inset-x-0 bottom-[185px] z-20 flex justify-center">
+            <div className="absolute inset-x-0 bottom-[157px] z-20 flex justify-center">
               <RouteToggle visible={routesVisible} onChange={setRoutesVisible} />
             </div>
             <JourneyCard onRead={() => setActiveSection("story")} />
