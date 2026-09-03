@@ -983,9 +983,16 @@ input[type="range"].homer-slider::-moz-range-thumb {
     text-overflow: ellipsis;
   }
   .homer-map--mobile .maplibregl-ctrl-bottom-right,
-  .homer-map--mobile .mapboxgl-ctrl-bottom-right { right: 8px; bottom: 220px; }
+  .homer-map--mobile .mapboxgl-ctrl-bottom-right {
+    right: 8px;
+    bottom: 8px;
+    z-index: 30;
+  }
   .homer-map--mobile .maplibregl-ctrl-bottom-left,
-  .homer-map--mobile .mapboxgl-ctrl-bottom-left { bottom: 220px; }
+  .homer-map--mobile .mapboxgl-ctrl-bottom-left {
+    bottom: 8px;
+    z-index: 30;
+  }
   .homer-map--mobile .maplibregl-ctrl-attrib,
   .homer-map--mobile .mapboxgl-ctrl-attrib {
     color: rgba(8, 18, 24, 0.8);
