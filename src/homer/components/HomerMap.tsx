@@ -25,19 +25,29 @@ interface GeographyLabel {
   name: string;
   nameEn: string;
   coord: [number, number];
-  kind: "sea" | "region";
+  kind: "sea" | "region" | "country";
   epic: "both" | "iliad" | "odyssey";
+  primary?: boolean;
+  mobileVisible?: boolean;
 }
 
 const GEOGRAPHY_LABELS: GeographyLabel[] = [
+  { id: "europe", name: "欧洲", nameEn: "EUROPE", coord: [22.7, 41.05], kind: "region", epic: "both", primary: true },
   { id: "aegean", name: "爱琴海", nameEn: "AEGEAN SEA", coord: [24.45, 38.25], kind: "sea", epic: "both" },
-  { id: "greece", name: "希腊本土", nameEn: "GREECE", coord: [21.85, 38.7], kind: "region", epic: "both" },
-  { id: "anatolia", name: "小亚细亚", nameEn: "ANATOLIA", coord: [28.2, 38.55], kind: "region", epic: "both" },
+  { id: "greece", name: "希腊", nameEn: "HELLAS · GREECE", coord: [22.9, 38.7], kind: "country", epic: "both", primary: true },
+  { id: "turkey", name: "土耳其", nameEn: "TÜRKİYE · ANATOLIA", coord: [28.45, 38.75], kind: "country", epic: "both", primary: true },
+  { id: "macedonia", name: "马其顿", nameEn: "MACEDONIA", coord: [21.55, 40.75], kind: "region", epic: "both" },
+  { id: "thrace", name: "色雷斯", nameEn: "THRACE", coord: [25.6, 41.35], kind: "region", epic: "both" },
+  { id: "peloponnese", name: "伯罗奔尼撒", nameEn: "PELOPONNESE", coord: [22.15, 37.25], kind: "region", epic: "both", mobileVisible: true },
+  { id: "crete", name: "克里特岛", nameEn: "CRETE", coord: [24.85, 35.35], kind: "region", epic: "both", mobileVisible: true },
+  { id: "adriatic", name: "亚得里亚海", nameEn: "ADRIATIC SEA", coord: [16.7, 42.1], kind: "sea", epic: "odyssey" },
   { id: "ionian", name: "伊奥尼亚海", nameEn: "IONIAN SEA", coord: [18.05, 37.2], kind: "sea", epic: "odyssey" },
   { id: "tyrrhenian", name: "第勒尼安海", nameEn: "TYRRHENIAN SEA", coord: [11.65, 39.05], kind: "sea", epic: "odyssey" },
-  { id: "italy", name: "意大利半岛", nameEn: "ITALIA", coord: [12.15, 42.15], kind: "region", epic: "odyssey" },
-  { id: "sicily", name: "西西里岛", nameEn: "SICILIA", coord: [13.25, 36.65], kind: "region", epic: "odyssey" },
-  { id: "north-africa", name: "北非海岸", nameEn: "NORTH AFRICA", coord: [11.1, 33.05], kind: "region", epic: "odyssey" },
+  { id: "mediterranean", name: "地中海", nameEn: "MEDITERRANEAN SEA", coord: [20.6, 33.8], kind: "sea", epic: "odyssey" },
+  { id: "italy", name: "意大利半岛", nameEn: "ITALIA", coord: [12.15, 42.15], kind: "region", epic: "odyssey", mobileVisible: true },
+  { id: "sardinia", name: "撒丁岛", nameEn: "SARDINIA", coord: [9.05, 40.05], kind: "region", epic: "odyssey" },
+  { id: "sicily", name: "西西里岛", nameEn: "SICILIA", coord: [13.25, 36.65], kind: "region", epic: "odyssey", mobileVisible: true },
+  { id: "north-africa", name: "北非海岸", nameEn: "NORTH AFRICA", coord: [11.1, 33.05], kind: "region", epic: "odyssey", mobileVisible: true },
 ];
 
 function routeColor(route: HomerRoute) {
@@ -296,7 +306,14 @@ export function HomerMap({ styleId, labelsVisible, routesVisible = true, mobile 
     if (labelsVisible) {
       GEOGRAPHY_LABELS.filter((label) => label.epic === "both" || label.epic === epic).forEach((geoLabel) => {
         const element = document.createElement("div");
-        element.className = `homer-geography-label homer-geography-label--${geoLabel.kind}`;
+        element.className = [
+          "homer-geography-label",
+          `homer-geography-label--${geoLabel.kind}`,
+          geoLabel.primary ? "homer-geography-label--primary" : "",
+          geoLabel.mobileVisible ? "homer-geography-label--mobile" : "",
+        ]
+          .filter(Boolean)
+          .join(" ");
         element.setAttribute("aria-hidden", "true");
 
         const name = document.createElement("span");
@@ -385,7 +402,7 @@ export function HomerMap({ styleId, labelsVisible, routesVisible = true, mobile 
         { padding, duration: 1100 },
       );
     }
-  }, [book, epic, labelsVisible, mobile, orderMode, ready, routesVisible, selectPlace, selectedPlaceId, storyStep, styleRevision]);
+  }, [book, epic, labelsVisible, mobile, orderMode, ready, routesVisible, selectPlace, selectedPlaceId, storyStep, styleId, styleRevision]);
 
   useEffect(() => {
     if (!mobile || !ready || !selectedPlaceId) return;
@@ -406,7 +423,9 @@ export function HomerMap({ styleId, labelsVisible, routesVisible = true, mobile 
           : "transparent";
 
   return (
-    <div className={`relative h-full w-full overflow-hidden bg-[#07131d] ${mobile ? "homer-map--mobile" : ""}`}>
+    <div
+      className={`relative h-full w-full overflow-hidden bg-[#07131d] ${mobile ? "homer-map--mobile" : ""} ${styleId === "satellite" ? "homer-map--satellite" : ""}`}
+    >
       <div ref={containerRef} className="absolute inset-0" />
       <div className="pointer-events-none absolute inset-0 transition-colors duration-500" style={{ backgroundColor: toneTint }} />
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_50%_45%,transparent_25%,rgba(2,9,15,0.42)_100%)]" />

@@ -36,6 +36,11 @@ function rasterStyle(opts: {
   background: string;
   maxzoom?: number;
   opacity?: number;
+  /** Optional cartographic reference layer rendered above the imagery. */
+  referenceTiles?: string[];
+  referenceAttribution?: string;
+  referenceMaxzoom?: number;
+  referenceOpacity?: number;
 }): StyleSpecification {
   return {
     version: 8,
@@ -48,6 +53,17 @@ function rasterStyle(opts: {
         attribution: opts.attribution,
         maxzoom: opts.maxzoom ?? 19,
       },
+      ...(opts.referenceTiles
+        ? {
+            reference: {
+              type: "raster" as const,
+              tiles: opts.referenceTiles,
+              tileSize: 256,
+              attribution: opts.referenceAttribution,
+              maxzoom: opts.referenceMaxzoom ?? opts.maxzoom ?? 19,
+            },
+          }
+        : {}),
     },
     layers: [
       {
@@ -61,6 +77,16 @@ function rasterStyle(opts: {
         source: "base",
         paint: { "raster-opacity": opts.opacity ?? 1 },
       },
+      ...(opts.referenceTiles
+        ? [
+            {
+              id: "reference",
+              type: "raster" as const,
+              source: "reference",
+              paint: { "raster-opacity": opts.referenceOpacity ?? 0.72 },
+            },
+          ]
+        : []),
     ],
   } as StyleSpecification;
 }
@@ -117,6 +143,13 @@ export const MAP_STYLES: MapStyleOption[] = [
       attribution: ATTR_ESRI,
       background: "#0a0a0a",
       maxzoom: 19,
+      referenceTiles: [
+        "https://services.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}",
+      ],
+      referenceAttribution:
+        "Reference: Esri, Garmin, HERE, OpenStreetMap contributors, and the GIS user community",
+      referenceMaxzoom: 19,
+      referenceOpacity: 0.7,
     }),
   },
   {
